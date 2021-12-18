@@ -1,14 +1,22 @@
 import React from 'react';
-import BossButton from '../_components/home/bossButton.js';
-import WorkerButton from '../_components/home/workerButton.js';
-import Box from '@material-ui/core/Box'
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 
 const HomeScreen = () => {
 	return(
-		<Box container sx = {{ display: 'flex', flexDirection:'column', justifyContent:'center', alignItems: 'center' }}>
-			<BossButton />
-			<WorkerButton />
-		</Box>
+		<Container>
+			<Link to='/bossLogin'>
+				<Button variant = 'contained' color = 'primary'>
+					Boss
+				</Button>
+			</Link>
+			<Link to = '/workerLogin'>
+				<Button variant = 'contained' color = 'secondary'>
+					Worker
+				</Button>
+			</Link>
+		</Container>
 		)
 }
 export default HomeScreen;
