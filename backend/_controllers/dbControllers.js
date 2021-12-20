@@ -10,9 +10,9 @@ export const newBoss =  async (req,res)=>{
 			location
 		});
 		const savedBoss = await newBoss.save();
-		res.json(`Your userId is ${savedBoss._id}`);
+		res.status(200).json(`Your userId is ${savedBoss._id}`);
 	}catch(err){
-		res.json('not successful');
+		res.status(400).json('not successful');
 	}
 }
 
@@ -27,9 +27,9 @@ export const newWorker =  async (req,res)=>{
 			skillset
 		});
 		const savedWorker = await newWorker.save();
-		res.json(`Your userId is ${savedWorker._id}`);
+		res.status(200).json(`Your userId is ${savedWorker._id}`);
 	}catch(err){
-		res.json('not successful');
+		res.status(400).json('not successful');
 	}
 }
 export const loginFunc = async (req,res) => {
@@ -39,9 +39,9 @@ export const loginFunc = async (req,res) => {
 			const bossData = await Boss.findById(bossID);
 			const idPassword = bossData.password;
 			const correct =  (password === idPassword)
-			correct ? res.json('logged in successfully'):res.json('username and password are incorrect')
+			correct ? res.status(200).json('logged in successfully'):res.status(401).json('username and password are incorrect')
 		}catch(err){
-			res.json('invalid ID')}
+			res.status(401).json('invalid ID')}
 		
 		// console.log(pass)
 	}catch(err){
