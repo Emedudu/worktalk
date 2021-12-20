@@ -17,7 +17,7 @@ const BossLogin = () => {
 	        'Content-Type': 'application/json',
 	      },
 	    })
-			.then((res)=> console.log(res.data))
+			.then((res)=> console.log(res.status))
 	}
 	return(
 		<Paper>
