@@ -24,17 +24,15 @@ const BossLogin = () => {
 			<form onSubmit = {handleSubmit}>
 				<TextField 
 				variant = 'outlined'
-				defaultValue = '61bb46b6dc34db7ea808f4d6'
 				label = 'Boss Id'
-				onFocus = {(e) => {setBossID(e.target.defaultValue)}}
+				onInput = {(e) => {setBossID(e.target.value)}}
 				required
 				/>
 				<TextField 
 				variant = 'outlined'
-				defaultValue = 'justtry'
 				label = 'Password'
 				type = 'password'
-				onFocus = {(e) => {setPassword(e.target.defaultValue)}}
+				onInput = {(e) => {setPassword(e.target.value)}}
 				required
 				/>
 				<Button variant = 'contained' color = 'primary' type = 'submit'>
