@@ -26,7 +26,8 @@ export const newWorker =  async (req,res)=>{
 }
 export const loginFunc = async (req,res) => {
 	const { bossID, password } = req.body;
-	const bossData = await Boss.find({password: password});
-	res.json(bossData);
-	
+	const bossData = await Boss.findById({_id:bossID});
+	const pass = await bossData.password
+	// ( password === pass )?res.json('logged in successfully'):res.json('username and password are incorrect')
+	console.log(pass)
 }
