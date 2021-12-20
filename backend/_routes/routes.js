@@ -1,9 +1,16 @@
 import express from 'express';
-import { newBoss, newWorker } from '../_controllers/dbControllers.js';
+import { newBoss, newWorker, loginFunc } from '../_controllers/dbControllers.js';
+
+export const homeRouter = express.Router();
+
+homeRouter.route('/').get((req,res) => {
+	res.json('welcome home');
+})
 
 export const bossRouter = express.Router();
 
 bossRouter.route('/post').post(newBoss);
+bossRouter.route('/login').post(loginFunc);
 
 export const workerRouter = express.Router();
 

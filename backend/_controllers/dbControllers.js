@@ -24,3 +24,9 @@ export const newWorker =  async (req,res)=>{
 	const savedWorker = await newWorker.save();
 	res.json(`Your userId is ${savedWorker._id}`);
 }
+export const loginFunc = async (req,res) => {
+	const { bossID, password } = req.body;
+	const bossData = await Boss.find({password: password});
+	res.json(bossData);
+	
+}

@@ -2,9 +2,12 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
 const handleSubmit = (event) => {
 	event.preventDefault();
+	axios.get('http://localhost:8001/')
+		.then((res)=>alert(res))
 
 }
 const WorkerLogin = () => {
