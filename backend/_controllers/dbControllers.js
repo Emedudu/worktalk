@@ -39,9 +39,9 @@ export const loginFunc = async (req,res) => {
 			const bossData = await Boss.findById(bossID);
 			const idPassword = bossData.password;
 			const correct =  (password === idPassword)
-			correct ? res.status(200).json('logged in successfully'):res.status(401).json('username and password are incorrect')
+			correct ? res.json('true'):res.json('false')
 		}catch(err){
-			res.status(401).json('invalid ID')}
+			res.json('false')}
 		
 		// console.log(pass)
 	}catch(err){
