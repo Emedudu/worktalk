@@ -6,7 +6,7 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 
 
-const BossLogin = () => {
+const BossLogin = ({isLogin, setIsLogin}) => {
 	const [bossID,setBossID] = useState('')
 	const [password,setPassword] = useState('')
 
@@ -17,7 +17,7 @@ const BossLogin = () => {
 	        'Content-Type': 'application/json',
 	      },
 	    })
-			.then((res)=> console.log(res.status))
+			.then((res)=> res ? setIsLogin(true):setIsLogin(false))
 	}
 	return(
 		<Paper>
