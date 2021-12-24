@@ -4,13 +4,13 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 
-const handleSubmit = (event) => {
-	event.preventDefault();
-	axios.get('http://localhost:8001/')
-		.then((res)=>alert(res))
-
-}
 const WorkerLogin = () => {
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		try{
+
+		}catch(err){console.log('an error occurred')}
+	}
 	return(
 		<Paper>
 			<form onSubmit = {handleSubmit} method = 'get'>
