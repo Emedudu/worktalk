@@ -4,7 +4,6 @@ import Paper from '@material-ui/core/Paper';
 // import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
-import { history } from '../App.js';
 
 const BossLogin = () => {
 	const [bossID,setBossID] = useState('')
@@ -13,14 +12,6 @@ const BossLogin = () => {
 	const handleSubmit = async(event) => {
 		event.preventDefault();
 		try{
-			const res = await axios.post('http://localhost:8001/boss/login',{bossID,password},{
-		      headers: {
-		        'Content-Type': 'application/json',
-		      },
-		    });
-		    const data = res.data;
-		    (data==='true') ? window.localStorage.setItem(isLogin,true):window.localStorage.setItem(isLogin,false)
-			history.push('/successLogin');
 
 		}catch(err){console.log('error occurred')}
 			
