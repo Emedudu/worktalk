@@ -48,3 +48,19 @@ export const loginFunc = async (req,res) => {
 		console.log(err)
 	}
 }
+export const loginFuncWorker = async(req,res) => {
+	try{
+		const {workerId, password, bossID} = req.body;
+		try{
+			const workerData = await Worker.findById(workerId);
+			const passwordCorrect = workerData.password === password;
+			const bossIDCorrect = workerData.bossID === bossID;
+			passwordCorrect && bossIDCorrect ?
+				res.json('true'):
+					res.json('false')
+		}catch(err){
+			res.json('false')}
+	}catch(err){
+		console.log(err)
+	}
+}
