@@ -1,5 +1,5 @@
 import express from 'express';
-import { newBoss, newWorker, loginFunc } from '../_controllers/dbControllers.js';
+import { newBoss, newWorker, loginFunc, loginFuncWorker } from '../_controllers/dbControllers.js';
 
 export const homeRouter = express.Router();
 
@@ -15,4 +15,4 @@ bossRouter.route('/login').post(loginFunc);
 export const workerRouter = express.Router();
 
 workerRouter.route('/post').post(newWorker);
-
+workerRouter.route('/login').post(loginFuncWorker);
