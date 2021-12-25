@@ -4,16 +4,25 @@ import Paper from '@material-ui/core/Paper';
 // import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
+import { useNavigate } from 'react-router-dom';
 
 const BossLogin = () => {
 	const [bossID,setBossID] = useState('')
 	const [password,setPassword] = useState('')
-	
+	const navigate = useNavigate();
 	const handleSubmit = async(event) => {
 		event.preventDefault();
 		try{
+			const config = {
+				headers:
+				{"Content-Type":"application/json"}
+			};
+			const res = await axios.post('/boss/login',{bossID,password},config)
+			res.data === 'true' ?
+				navigate('/successLogin'):
+					navigate('/')
 
-		}catch(err){console.log('error occurred')}
+		}catch(err){console.log(err)}
 			
 	}
 	return(
