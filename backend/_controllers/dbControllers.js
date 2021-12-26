@@ -38,7 +38,7 @@ export const loginFunc = async (req,res) => {
 		try{
 			const bossData = await Boss.findById(bossID);
 			const idPassword = bossData.password;
-			const correct =  (password === idPassword)
+			const correct =  (password === idPassword);
 			correct ? res.json('true'):res.json('false')
 		}catch(err){
 			res.json('false')}
@@ -50,11 +50,12 @@ export const loginFunc = async (req,res) => {
 }
 export const loginFuncWorker = async(req,res) => {
 	try{
-		const {workerId, password, bossID} = req.body;
+		const {workerID, password, bossID} = req.body;
 		try{
-			const workerData = await Worker.findById(workerId);
+			const workerData = await Worker.findById(workerID);
 			const passwordCorrect = workerData.password === password;
 			const bossIDCorrect = workerData.bossID === bossID;
+			console.log(workerData.bossID);
 			passwordCorrect && bossIDCorrect ?
 				res.json('true'):
 					res.json('false')
