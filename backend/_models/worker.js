@@ -15,7 +15,7 @@ const WorkerSchema = mongoose.Schema(
 			required: true
 		},
 		bossID: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: String,
 			required: true,
 			unique: false
 		},
