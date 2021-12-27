@@ -4,8 +4,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import HomeScreen from './_screens/HomeScreen.js';
 import BossLogin from './_screens/bossLogin.js';
 import WorkerLogin from './_screens/workerLogin.js';
-import SuccessLogin from './_screens/successLogin';
-import WorkerSuccessLogin from './_screens/workerSuccessLogin';
+import SuccessLogin from './_screens/successLogin.js';
+import WorkerSuccessLogin from './_screens/workerSuccessLogin.js';
+import CreateAccountWorker from './_screens/createAccountWorker.js';
 
 function App() {
 	
@@ -18,7 +19,7 @@ function App() {
 				    <Route path = "/workerLogin" exact element = { <WorkerLogin/> } />
 				    <Route path = "/successLogin" exact element = { <SuccessLogin /> } />
 				    <Route path = "/workerSuccessLogin" exact element = { <WorkerSuccessLogin /> } />
-
+				    <Route path = "/createAccountWorker" exact element = { <CreateAccountWorker /> }/>
 				</Routes>
 			</div>
 		</Router>
