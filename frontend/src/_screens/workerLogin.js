@@ -19,13 +19,17 @@ const WorkerLogin = () => {
 			}
 		}
 		try{
-			const res = await axios.post('/worker/login',{workerID, password, bossID},config);
+			const res = await axios.post('http://localhost:8001/worker/login',{workerID, password, bossID},config);
 			res.data === 'true'?
 				navigate('/workerSuccessLogin'):
 					navigate('/')
 
 
 		}catch(err){console.log('an error occurred')}
+	}
+
+	const createAccount = () => {
+		navigate('/createAccountWorker')
 	}
 	return(
 		<Paper>
@@ -55,7 +59,7 @@ const WorkerLogin = () => {
 				<Button variant = 'contained' color = 'primary' type = 'submit'>
 					LOGIN
 				</Button>
-				<Button variant = 'contained' color = 'secondary'>
+				<Button variant = 'contained' color = 'secondary' onClick = {createAccount}>
 					CREATE ACCOUNT
 				</Button>
 			</form>
