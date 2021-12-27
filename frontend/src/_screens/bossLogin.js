@@ -17,7 +17,7 @@ const BossLogin = () => {
 				headers:
 				{"Content-Type":"application/json"}
 			};
-			const res = await axios.post('/boss/login',{bossID,password},config)
+			const res = await axios.post('http://localhost:8001/boss/login',{bossID,password},config)
 			res.data === 'true' ?
 				navigate('/successLogin'):
 					navigate('/')
