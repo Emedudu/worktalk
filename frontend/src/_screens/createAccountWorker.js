@@ -71,6 +71,11 @@ const CreateAccountWorker = () => {
 					label = {`skill ${i+1}`}
 					type = 'text'
 					key = {i}
+					onChange = { (e)=> setSkillset(skillset.map((elem,index)=>{
+						if (index === i){
+							skillset[index] = e.target.value
+						}
+					}))}
 					required
 					/>
 					)})}
