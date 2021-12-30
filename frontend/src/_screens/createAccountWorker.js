@@ -4,6 +4,29 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+const ListOfSkills = ({listOfSkillNumbers})=>{
+	const listOfSkills = listOfSkillNumbers.map(
+		(elem,i)=>{
+			return(
+				<TextField
+				variant = 'outlined'
+				label = {`skill ${i+1}`}
+				type = 'text'
+				key = {i}
+				onChange = {(e) =>{
+					listOfSkillNumbers[i]=e.target.value
+				}}
+				required
+				/>
+			)
+		}
+	)
+	return(
+		<>
+			{listOfSkills}
+		</>
+	)};
+
 const CreateAccountWorker = () => {
 	const [name, setName] = useState('');
 	const [password, setPassword] = useState('');
@@ -12,15 +35,12 @@ const CreateAccountWorker = () => {
 	const [skillsetNumber, setSkillsetNumber] =useState(0);
 	const [skillset, setSkillset] = useState([]);
 
-	const listOfSkills = [];
-	
-	for (let i = 0;i<skillsetNumber;i++){
-		listOfSkills.push(i)
-	}
+	const listOfSkillNumbers = [];
 
-	useEffect(()=>{
-		console.log(skillset)
-	},[skillset])
+	for (let i = 0;i<skillsetNumber;i++){
+		listOfSkillNumbers.push(i);
+	
+	}
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -65,20 +85,7 @@ const CreateAccountWorker = () => {
 				type = 'number'
 				onInput = { (e)=> {setSkillsetNumber(e.target.value)} }
 				required/>
-				{listOfSkills.map((elem,i)=>{return(
-					<TextField
-					variant = 'outlined'
-					label = {`skill ${i+1}`}
-					type = 'text'
-					key = {i}
-					onChange = { (e)=> setSkillset(skillset.map((elem,index)=>{
-						if (index === i){
-							skillset[index] = e.target.value
-						}
-					}))}
-					required
-					/>
-					)})}
+				{<ListOfSkills listOfSkillNumbers = {listOfSkillNumbers}/>}
 				<Button variant = 'contained' color = 'primary' type = 'submit'>
 					CREATE ACCOUNT
 				</Button>
