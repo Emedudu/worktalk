@@ -1,10 +1,11 @@
 import React, { useState, useEffect }from 'react';
+import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-const ListOfSkills = ({listOfSkillNumbers})=>{
+const ListOfSkills = ({listOfSkillNumbers,skillset})=>{
 	const listOfSkills = listOfSkillNumbers.map(
 		(elem,i)=>{
 			return(
@@ -14,7 +15,8 @@ const ListOfSkills = ({listOfSkillNumbers})=>{
 				type = 'text'
 				key = {i}
 				onChange = {(e) =>{
-					listOfSkillNumbers[i]=e.target.value
+					e.preventDefault();
+					skillset[i]=e.target.value
 				}}
 				required
 				/>
@@ -33,22 +35,35 @@ const CreateAccountWorker = () => {
 	const [location, setLocation] = useState('');
 	const [bossID, setBossID] = useState('');
 	const [skillsetNumber, setSkillsetNumber] =useState(0);
-	const [skillset, setSkillset] = useState([]);
 
 	const listOfSkillNumbers = [];
-
+	const skillset = [];
 	for (let i = 0;i<skillsetNumber;i++){
 		listOfSkillNumbers.push(i);
 	
 	}
-
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
+		const config = {
+			headers : {
+				"Content-Type":"application/json"
+			}
+		}
+		try{
+			const res = await axios.post(
+				'http://localhost:8001/worker/post',
+				{name, password, location,bossID,skillset},
+				config);
+			console.log(res.data);
+
+		}catch(err){console.log(err)}
 
 	}
-	const getLocation = () => {
-		navigator.geolocation.getCurrentPosition(position => setLocation(`[${position.coords.latitude},${position.coords.longitude}]`))
-	
+	const getLocation = (e) => {
+		const location = navigator.geolocation.getCurrentPosition(position => setLocation(`[${position.coords.latitude},${position.coords.longitude}]`));
+		location!==undefined ? 
+			setLocation(location):
+				setLocation('undefined');
 	}
 	return(
 		<Container>
@@ -57,35 +72,37 @@ const CreateAccountWorker = () => {
 				variant = 'outlined'
 				defaultValue = 'Name'
 				label = 'Name'
-				onInput = { (e)=> {setName(e.target.value)} }
+				onFocus = { (e)=> {setName(e.target.value)} }
 				required/>
 				<TextField
 				variant = 'outlined'
 				defaultValue = 'Password'
 				label = 'Password'
 				type = 'password'
-				onInput = { (e)=> {setPassword(e.target.value)} }
+				onFocus = { (e)=> {setPassword(e.target.value)} }
 				required/>
 				<TextField
 				variant = 'outlined'
-				defaultValue = 'Location'
 				label = 'Location'
 				onFocus = {getLocation}
-				required/>
+				/>
 				<TextField
 				variant = 'outlined'
 				defaultValue = 'Boss ID'
 				label = 'Boss ID'
-				onInput = { (e)=> {setBossID(e.target.value)} }
+				onFocus = { (e)=> {setBossID(e.target.value)} }
 				required/>
 				<TextField
 				variant = 'outlined'
 				defaultValue = '0'
 				label = 'Number of Skills'
 				type = 'number'
-				onInput = { (e)=> {setSkillsetNumber(e.target.value)} }
+				onInput = { (e)=> {
+					e.preventDefault();
+					setSkillsetNumber(e.target.value)} 
+				}
 				required/>
-				{<ListOfSkills listOfSkillNumbers = {listOfSkillNumbers}/>}
+				{<ListOfSkills listOfSkillNumbers = {listOfSkillNumbers} skillset = {skillset}/>}
 				<Button variant = 'contained' color = 'primary' type = 'submit'>
 					CREATE ACCOUNT
 				</Button>
