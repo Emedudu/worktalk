@@ -29,7 +29,7 @@ export const newWorker =  async (req,res)=>{
 		const savedWorker = await newWorker.save();
 		res.status(200).json(`Your userId is ${savedWorker._id}`);
 	}catch(err){
-		res.status(400).json('not successful');
+		console.log(err);
 	}
 }
 export const loginFunc = async (req,res) => {
