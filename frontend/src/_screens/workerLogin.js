@@ -36,14 +36,12 @@ const WorkerLogin = () => {
 			<form onSubmit = {handleSubmit}>
 				<TextField 
 				variant = 'outlined'
-				defaultValue = 'WORKER ID'
 				label = 'Worker Id'
 				onInput = {(e)=>{setWorkerId(e.target.value)}}
 				required
 				/>
 				<TextField 
 				variant = 'outlined'
-				defaultValue = 'PASSWORD'
 				label = 'Password'
 				type = 'password'
 				onInput = {(e)=>{setPassword(e.target.value)}}
@@ -51,7 +49,6 @@ const WorkerLogin = () => {
 				/>
 				<TextField 
 				variant = 'outlined'
-				defaultValue = 'BOSS ID'
 				label = 'Boss Id'
 				onInput = {(e)=>{setBossID(e.target.value)}}
 				required
