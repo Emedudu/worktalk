@@ -19,7 +19,7 @@ const BossLogin = () => {
 			};
 			const res = await axios.post('http://localhost:8001/boss/login',{bossID,password},config)
 			res.data === 'true' ?
-				navigate('/successLogin'):
+				navigate('/'):
 					navigate('/')
 
 		}catch(err){console.log(err)}
