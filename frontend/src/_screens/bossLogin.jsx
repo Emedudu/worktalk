@@ -24,6 +24,10 @@ const BossLogin = () => {
 		}catch(err){console.log(err)}
 			
 	}
+	const createAccount = (e) => {
+		e.preventDefault();
+		navigate('/createAccountBoss')
+	}
 	return(
 		<Paper>
 			<form onSubmit = {handleSubmit}>
@@ -43,7 +47,7 @@ const BossLogin = () => {
 				<Button variant = 'contained' color = 'primary' type = 'submit'>
 					LOGIN
 				</Button>
-				<Button variant = 'contained' color = 'secondary'>
+				<Button variant = 'contained' color = 'secondary' onClick = {createAccount}>
 					CREATE ACCOUNT
 				</Button>
 			</form>
