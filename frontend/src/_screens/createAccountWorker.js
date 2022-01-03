@@ -35,6 +35,8 @@ const CreateAccountWorker = () => {
 	const [location, setLocation] = useState('');
 	const [bossID, setBossID] = useState('');
 	const [skillsetNumber, setSkillsetNumber] =useState(0);
+	const [response, setResponse] = useState('');
+	const [buttonStatus,setButtonStatus] = useState(true)
 
 	const listOfSkillNumbers = [];
 	const skillset = [];
@@ -42,6 +44,13 @@ const CreateAccountWorker = () => {
 		listOfSkillNumbers.push(i);
 	
 	}
+
+	useEffect(()=>{
+		if (response){
+			setButtonStatus(false);
+		}
+	},[response,setButtonStatus])
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const config = {
@@ -54,7 +63,7 @@ const CreateAccountWorker = () => {
 				'http://localhost:8001/worker/post',
 				{name, password, location,bossID,skillset},
 				config);
-			console.log(res.data);
+			setResponse(res.data);
 
 		}catch(err){console.log(err)}
 
@@ -70,16 +79,14 @@ const CreateAccountWorker = () => {
 			<form onSubmit = {handleSubmit}>
 				<TextField
 				variant = 'outlined'
-				defaultValue = 'Name'
 				label = 'Name'
-				onFocus = { (e)=> {setName(e.target.value)} }
+				onBlur = { (e)=> {setName(e.target.value)} }
 				required/>
 				<TextField
 				variant = 'outlined'
-				defaultValue = 'Password'
 				label = 'Password'
 				type = 'password'
-				onFocus = { (e)=> {setPassword(e.target.value)} }
+				onBlur = { (e)=> {setPassword(e.target.value)} }
 				required/>
 				<TextField
 				variant = 'outlined'
@@ -88,16 +95,15 @@ const CreateAccountWorker = () => {
 				/>
 				<TextField
 				variant = 'outlined'
-				defaultValue = 'Boss ID'
 				label = 'Boss ID'
-				onFocus = { (e)=> {setBossID(e.target.value)} }
+				onBlur = { (e)=> {setBossID(e.target.value)} }
 				required/>
 				<TextField
 				variant = 'outlined'
 				defaultValue = '0'
 				label = 'Number of Skills'
 				type = 'number'
-				onInput = { (e)=> {
+				onBlur = { (e)=> {
 					e.preventDefault();
 					setSkillsetNumber(e.target.value)} 
 				}
@@ -105,6 +111,12 @@ const CreateAccountWorker = () => {
 				{<ListOfSkills listOfSkillNumbers = {listOfSkillNumbers} skillset = {skillset}/>}
 				<Button variant = 'contained' color = 'primary' type = 'submit'>
 					CREATE ACCOUNT
+				</Button>
+				<Typography variant = 'body1'>
+					{response}
+				</Typography>
+				<Button variant = 'contained' color = 'primary' disabled = {buttonStatus}>
+					CONTINUE
 				</Button>
 			</form>
 		</Container>
