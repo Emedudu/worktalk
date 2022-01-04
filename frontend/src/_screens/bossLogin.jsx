@@ -17,8 +17,8 @@ const BossLogin = () => {
 				{"Content-Type":"application/json"}
 			};
 			const res = await axios.post('http://localhost:8001/boss/login',{bossID,password},config)
-			res.data === 'true' ?
-				navigate('/'):
+			res.data ?
+				navigate('/mainScreenBoss'):
 					navigate('/')
 
 		}catch(err){console.log(err)}
