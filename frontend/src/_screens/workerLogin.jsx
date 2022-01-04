@@ -20,8 +20,8 @@ const WorkerLogin = () => {
 		}
 		try{
 			const res = await axios.post('http://localhost:8001/worker/login',{workerID, password, bossID},config);
-			res.data === 'true'?
-				navigate('/workerSuccessLogin'):
+			res.data ?
+				navigate('/mainScreenWorker'):
 					navigate('/')
 
 
