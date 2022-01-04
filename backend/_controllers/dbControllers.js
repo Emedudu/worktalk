@@ -10,7 +10,9 @@ export const newBoss =  async (req,res)=>{
 			location
 		});
 		const savedBoss = await newBoss.save();
-		res.status(200).json(`Your userId is ${savedBoss._id}`);
+		res.status(200).json({message:`Your userId is ${savedBoss._id}`,
+							  success:true
+	});
 	}catch(err){
 		res.status(400).json('not successful');
 	}
@@ -27,7 +29,9 @@ export const newWorker =  async (req,res)=>{
 			skillset
 		});
 		const savedWorker = await newWorker.save();
-		res.status(200).json(`Your userId is ${savedWorker._id}`);
+		res.status(200).json({message:`Your userId is ${savedWorker._id}`,
+							  success:true
+		});
 	}catch(err){
 		console.log(err);
 	}
@@ -39,9 +43,9 @@ export const loginFunc = async (req,res) => {
 			const bossData = await Boss.findById(bossID);
 			const idPassword = bossData.password;
 			const correct =  (password === idPassword);
-			correct ? res.json('true'):res.json('false')
+			correct ? res.json(true):res.json(false)
 		}catch(err){
-			res.json('false')}
+			res.json(false)}
 		
 		// console.log(pass)
 	}catch(err){
@@ -57,10 +61,10 @@ export const loginFuncWorker = async(req,res) => {
 			const bossIDCorrect = workerData.bossID === bossID;
 			console.log(workerData.bossID);
 			passwordCorrect && bossIDCorrect ?
-				res.json('true'):
-					res.json('false')
+				res.json(true):
+					res.json(false)
 		}catch(err){
-			res.json('false')}
+			res.json(false)}
 	}catch(err){
 		console.log(err)
 	}
