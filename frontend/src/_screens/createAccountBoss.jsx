@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Button, Typography } from '@material-ui/core';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateAccountBoss = () => {
+    const navigate = useNavigate();
     const [name,setName] = useState('');
     const [password,setPassword] = useState('');
     const [location,setLocation] = useState('');
@@ -29,6 +31,11 @@ const CreateAccountBoss = () => {
 		location!==undefined ? 
 			setLocation(location):
 				setLocation('undefined');
+    }
+    const continueAction = ()=>{
+        if (response.success){
+            navigate('/mainScreenBoss')
+        }
     }
     return(
         <form onSubmit = {handleSubmit}>
@@ -59,11 +66,12 @@ const CreateAccountBoss = () => {
                 CREATE ACCOUNT
             </Button>
             <Typography variant = 'body2'>
-                {response}
+                {response.message}
             </Typography>
             <Button 
             variant = 'contained' 
             color = 'primary' 
+            onClick = {continueAction}
             >
                 CONTINUE
             </Button>
