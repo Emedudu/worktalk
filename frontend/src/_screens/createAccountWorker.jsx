@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { useNavigate } from 'react-router-dom';
 
 const ListOfSkills = ({listOfSkillNumbers,skillset})=>{
 	const listOfSkills = listOfSkillNumbers.map(
@@ -30,6 +31,8 @@ const ListOfSkills = ({listOfSkillNumbers,skillset})=>{
 	)};
 
 const CreateAccountWorker = () => {
+	const navigate = useNavigate()
+
 	const [name, setName] = useState('');
 	const [password, setPassword] = useState('');
 	const [location, setLocation] = useState('');
@@ -68,11 +71,16 @@ const CreateAccountWorker = () => {
 		}catch(err){console.log(err)}
 
 	}
-	const getLocation = (e) => {
+	const getLocation = () => {
 		const location = navigator.geolocation.getCurrentPosition(position => setLocation(`[${position.coords.latitude},${position.coords.longitude}]`));
 		location!==undefined ? 
 			setLocation(location):
 				setLocation('undefined');
+	}
+	const continueAction = ()=>{
+		if (response.success){
+			navigate('/mainScreenWorker');
+		}
 	}
 	return(
 		<Container>
@@ -103,7 +111,7 @@ const CreateAccountWorker = () => {
 				defaultValue = '0'
 				label = 'Number of Skills'
 				type = 'number'
-				onBlur = { (e)=> {
+				onInput = { (e)=> {
 					e.preventDefault();
 					setSkillsetNumber(e.target.value)} 
 				}
@@ -113,9 +121,9 @@ const CreateAccountWorker = () => {
 					CREATE ACCOUNT
 				</Button>
 				<Typography variant = 'body1'>
-					{response}
+					{response.message}
 				</Typography>
-				<Button variant = 'contained' color = 'primary' disabled = {buttonStatus}>
+				<Button variant = 'contained' color = 'primary' onClick = {continueAction} disabled = {buttonStatus}>
 					CONTINUE
 				</Button>
 			</form>
