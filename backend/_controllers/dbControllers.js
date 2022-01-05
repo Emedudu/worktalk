@@ -1,5 +1,6 @@
 import Boss from '../_models/boss.js';
 import Worker from '../_models/worker.js';
+import { WebSocketServer } from 'ws' ;
 
 export const newBoss =  async (req,res)=>{
 	try{
@@ -67,5 +68,18 @@ export const loginFuncWorker = async(req,res) => {
 			res.json(false)}
 	}catch(err){
 		console.log(err)
+	}
+}
+export const chatFunc = async(req,res)=>{
+	try{
+		const wss = new WebSocketServer({port:8009});
+		wss.on("connection",ws=>{
+			console.log('New socket connected');
+			ws.on("close",()=>{
+				console.log('client disconnected');
+			})
+		})
+	}catch(err){
+		console.log('err');
 	}
 }
