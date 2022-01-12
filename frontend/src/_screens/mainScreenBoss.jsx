@@ -1,16 +1,27 @@
+import { Container, TextField, Typography } from '@material-ui/core';
 import React from 'react';
-import axios from 'axios';
 
 const MainScreenBoss = ()=>{
-    axios.get('http://localhost:8001/boss/chat')
-        .then( res => {
-            const ws = new WebSocket('ws://localhost:8009')
+    const webSocketConnect = async()=>{
+        const ws = new WebSocket('ws://localhost:8001');
+        ws.onopen = (event)=>{
+            console.log(event);
         }
-    )
+    }
+    webSocketConnect();
     return(
-        <>
-        
-        </>
+        <Container>
+            <Typography variant = 'h3'>Chat Screen</Typography>
+            <TextField
+            placeholder='Enter skills'
+            variant = 'outlined'
+            />
+            <TextField 
+            placeholder='Enter location'
+            variant = 'outlined'
+            />
+
+        </Container>
     )
 }
 export default MainScreenBoss;
