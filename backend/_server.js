@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './connectdb.js';
 import { bossRouter, workerRouter } from './_routes/routes.js';
+import WebSocket, { WebSocketServer } from 'ws' ;
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;
@@ -15,4 +16,17 @@ app.use('/boss',bossRouter);
 app.use('/worker',workerRouter);
 
 connectDB();
-app.listen(PORT,console.log(`server is running on ${PORT}`));
+
+const websocketServer = new WebSocketServer({
+    noServer: true
+  });
+app.listen(PORT,console.log(`server is running on ${PORT}`)).
+    on('upgrade',(request, socket, head) => {
+        websocketServer.handleUpgrade(request, socket, head, (websocket) => {
+          websocketServer.emit("connection", websocket, request);
+        });
+      });
+websocketServer.on('connection',(ws)=>{
+    ws.on('message',(message)=>console.log(message.toString()))
+    ws.on('close',()=>console.log('disconnected successfully'))
+})
