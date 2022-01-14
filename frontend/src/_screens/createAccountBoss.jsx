@@ -4,7 +4,7 @@ import { Button, Typography } from '@material-ui/core';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const CreateAccountBoss = () => {
+const CreateAccountBoss = ({setBossChatName}) => {
     const navigate = useNavigate();
     const [name,setName] = useState('');
     const [password,setPassword] = useState('');
@@ -36,6 +36,7 @@ const CreateAccountBoss = () => {
         if (response.success){
             navigate('/mainScreenBoss')
         }
+        setBossChatName(name)
     }
     return(
         <form onSubmit = {handleSubmit}>
@@ -66,7 +67,7 @@ const CreateAccountBoss = () => {
                 CREATE ACCOUNT
             </Button>
             <Typography variant = 'body2'>
-                {response.message}
+                {`Your user ID is ${response.message}`}
             </Typography>
             <Button 
             variant = 'contained' 
