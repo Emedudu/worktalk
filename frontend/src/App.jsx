@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomeScreen from './_screens/homeScreen.jsx';
@@ -11,18 +11,18 @@ import MainScreenBoss from './_screens/mainScreenBoss';
 
 
 function App() {
-	
+	const [bossChatName,setBossChatName] = useState('')
 	return (
 	  	<Router>
 		    <div className="App">
 			    <Routes>
 				    <Route path = "/" exact element = { <HomeScreen /> } />
-				    <Route path = "/bossLogin" exact element = { <BossLogin /> } />
+				    <Route path = "/bossLogin" exact element = { <BossLogin setBossChatName = {setBossChatName}/> } />
 				    <Route path = "/workerLogin" exact element = { <WorkerLogin/> } />
 				    <Route path = "/createAccountWorker" exact element = { <CreateAccountWorker /> }/>
-					<Route path = "createAccountBoss" exact element = { <CreateAccountBoss/> } />
+					<Route path = "createAccountBoss" exact element = { <CreateAccountBoss setBossChatName = {setBossChatName}/> } />
 					<Route path = "mainScreenWorker" exact element = { <MainScreenWorker/>}/>
-					<Route path = "mainScreenBoss" exact element = { <MainScreenBoss/>}/>
+					<Route path = "mainScreenBoss" exact element = { <MainScreenBoss bossChatName = {bossChatName}/>}/>
 				</Routes>
 			</div>
 		</Router>
