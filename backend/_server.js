@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './connectdb.js';
 import { bossRouter, workerRouter } from './_routes/routes.js';
-import { WebSocketServer } from 'ws' ;
 import { connectServer } from './_controllers/webSocketController.js';
 
 dotenv.config();
