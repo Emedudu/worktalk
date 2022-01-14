@@ -1,37 +1,38 @@
 import { Button, Container, TextField, Typography } from '@material-ui/core';
 import React from 'react';
-import axios from 'axios';
 import { useState } from 'react';
 import ListOfSkills from '../_components/skillset';
 
-const MainScreenBoss = ()=>{
+const MainScreenBoss = ({bossChatName})=>{
     const [skillsetNumber, setSkillsetNumber] =useState(0);
     const [location, setLocation] = useState('');
     const [message, setMessage] = useState(`I need you at location ${location}`)
+    const from = bossChatName;
+
     const listOfSkillNumbers = [];
 	const skillset = [];
 	for (let i = 0;i<skillsetNumber;i++){
 		listOfSkillNumbers.push(i);
 	
 	}
+    
     const ws = new WebSocket('ws://localhost:8001');
+    ws.onmessage = (message)=>{console.log(message)}
+
     const handleSubmit = (e)=>{
         e.preventDefault();
+        let date = Date.now()
+        try{
+            ws.send(JSON.stringify({skillset,location,message,date,from}));
+        }catch(err){console.log(err)}
         
-        ws.onopen = (event)=>{
-            ws.send({skillset,location,message});
-        }
-		// const config = {
-		// 	headers : {
-		// 		"Content-Type":"application/json"
-		// 	}
-		// }
-        // axios.post('http://localhost:8001/worker/post',
-        //     {},
-        //     config);
-        // )
     }
-    const getLocation = () => {
+    
+    
+    
+    
+    const getLocation = (e) => {
+        e.preventDefault();
 		const location = navigator.geolocation.getCurrentPosition(position => setLocation(`[${position.coords.latitude},${position.coords.longitude}]`));
 		location!==undefined ? 
 			setLocation(location):
