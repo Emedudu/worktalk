@@ -1,6 +1,5 @@
 import Boss from '../_models/boss.js';
 import Worker from '../_models/worker.js';
-import WebSocket, { WebSocketServer } from 'ws' ;
 
 export const newBoss =  async (req,res)=>{
 	try{
@@ -11,11 +10,11 @@ export const newBoss =  async (req,res)=>{
 			location
 		});
 		const savedBoss = await newBoss.save();
-		res.status(200).json({message:`Your userId is ${savedBoss._id}`,
+		res.status(200).json({message: savedBoss._id,
 							  success:true
 	});
 	}catch(err){
-		res.status(400).json('not successful');
+		res.status(400).json(false);
 	}
 }
 
@@ -42,9 +41,12 @@ export const loginFunc = async (req,res) => {
 		const { bossID, password } = req.body;
 		try{
 			const bossData = await Boss.findById(bossID);
+			const bossName = bossData.name
 			const idPassword = bossData.password;
 			const correct =  (password === idPassword);
-			correct ? res.json(true):res.json(false)
+			res.json({success :correct,
+					  name :bossName
+			})
 		}catch(err){
 			res.json(false)}
 		
