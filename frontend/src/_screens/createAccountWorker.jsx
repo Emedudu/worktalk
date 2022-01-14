@@ -5,30 +5,7 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { useNavigate } from 'react-router-dom';
-
-const ListOfSkills = ({listOfSkillNumbers,skillset})=>{
-	const listOfSkills = listOfSkillNumbers.map(
-		(elem,i)=>{
-			return(
-				<TextField
-				variant = 'outlined'
-				label = {`skill ${i+1}`}
-				type = 'text'
-				key = {i}
-				onChange = {(e) =>{
-					e.preventDefault();
-					skillset[i]=e.target.value
-				}}
-				required
-				/>
-			)
-		}
-	)
-	return(
-		<>
-			{listOfSkills}
-		</>
-	)};
+import ListOfSkills from '../_components/skillset';
 
 const CreateAccountWorker = () => {
 	const navigate = useNavigate()
