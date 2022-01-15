@@ -4,7 +4,7 @@ import { Button, Typography } from '@material-ui/core';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const CreateAccountBoss = ({setBossChatName}) => {
+const CreateAccountBoss = ({setBossChatName,setBossChatId}) => {
     const navigate = useNavigate();
     const [name,setName] = useState('');
     const [password,setPassword] = useState('');
@@ -37,6 +37,7 @@ const CreateAccountBoss = ({setBossChatName}) => {
             navigate('/mainScreenBoss')
         }
         setBossChatName(name)
+        setBossChatId(response.message)
     }
     return(
         <form onSubmit = {handleSubmit}>
