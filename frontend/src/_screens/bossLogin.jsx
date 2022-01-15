@@ -5,7 +5,7 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
 
-const BossLogin = ({setBossChatName}) => {
+const BossLogin = ({setBossChatName, setBossChatId}) => {
 	const [bossID,setBossID] = useState('')
 	const [password,setPassword] = useState('')
 	const navigate = useNavigate();
@@ -19,7 +19,8 @@ const BossLogin = ({setBossChatName}) => {
 			const res = await axios.post('http://localhost:8001/boss/login',{bossID,password},config)
 			if (res.data.success){
 				navigate('/mainScreenBoss');
-				setBossChatName(res.data.name)
+				setBossChatName(res.data.name);
+				setBossChatId(bossID);
 			}else{navigate('/')}
 		}catch(err){console.log(err)}
 			
