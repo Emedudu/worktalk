@@ -3,11 +3,12 @@ import React from 'react';
 import { useState } from 'react';
 import ListOfSkills from '../_components/skillset';
 
-const MainScreenBoss = ({bossChatName})=>{
+const MainScreenBoss = ({bossChatName,bossChatId})=>{
     const [skillsetNumber, setSkillsetNumber] =useState(0);
     const [location, setLocation] = useState('');
     const [message, setMessage] = useState(`I need you at location ${location}`)
     const from = bossChatName;
+    const fromId = bossChatId;
 
     const listOfSkillNumbers = [];
 	const skillset = [];
@@ -23,7 +24,7 @@ const MainScreenBoss = ({bossChatName})=>{
         e.preventDefault();
         let date = Date.now()
         try{
-            ws.send(JSON.stringify({skillset,location,message,date,from}));
+            ws.send(JSON.stringify({skillset,location,message,date,from, fromId}));
         }catch(err){console.log(err)}
         
     }
