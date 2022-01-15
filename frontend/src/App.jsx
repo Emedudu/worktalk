@@ -11,18 +11,19 @@ import MainScreenBoss from './_screens/mainScreenBoss';
 
 
 function App() {
-	const [bossChatName,setBossChatName] = useState('')
+	const [bossChatName,setBossChatName] = useState('');
+	const [bossChatId, setBossChatId] = useState('');
 	return (
 	  	<Router>
 		    <div className="App">
 			    <Routes>
 				    <Route path = "/" exact element = { <HomeScreen /> } />
-				    <Route path = "/bossLogin" exact element = { <BossLogin setBossChatName = {setBossChatName}/> } />
+				    <Route path = "/bossLogin" exact element = { <BossLogin setBossChatName = {setBossChatName} setBossChatId={setBossChatId}/> } />
 				    <Route path = "/workerLogin" exact element = { <WorkerLogin/> } />
 				    <Route path = "/createAccountWorker" exact element = { <CreateAccountWorker /> }/>
-					<Route path = "createAccountBoss" exact element = { <CreateAccountBoss setBossChatName = {setBossChatName}/> } />
+					<Route path = "createAccountBoss" exact element = { <CreateAccountBoss setBossChatName = {setBossChatName} setBossChatId={setBossChatId}/> } />
 					<Route path = "mainScreenWorker" exact element = { <MainScreenWorker/>}/>
-					<Route path = "mainScreenBoss" exact element = { <MainScreenBoss bossChatName = {bossChatName}/>}/>
+					<Route path = "mainScreenBoss" exact element = { <MainScreenBoss bossChatName = {bossChatName} bossChatId={bossChatId}/>}/>
 				</Routes>
 			</div>
 		</Router>
