@@ -1,5 +1,6 @@
 import { WebSocketServer } from 'ws' ;
 import BossOrder from '../_models/bossToWorker.js';
+import { ProcessOrder } from './orderProcessor.js';
 
 const websocketServer = new WebSocketServer({
   noServer: true
@@ -18,12 +19,14 @@ websocketServer.on('connection',(ws)=>{
     const location = frontendForm.location.toString();
     const message = frontendForm.message.toString();
     const timestamp = frontendForm.date.toString();
-    const to = frontendForm.message.toString();
     const from = frontendForm.from.toString();
+    const fromId = frontendForm.fromId.toString();
+    const to = await ProcessOrder(fromId,skillset,location)
+
     try{
       const newBossOrder = await new BossOrder({message,timestamp,to,from})
       newBossOrder.save()
-    }catch(err){console.log(err)}
+    }catch(err){console.log('or occured at webSocketController.js')}
   })
   ws.on('close',()=>console.log('disconnected successfully'))
 })
