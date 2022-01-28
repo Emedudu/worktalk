@@ -15,12 +15,12 @@ export const connectServer = (server)=>{
 websocketServer.on('connection',(ws)=>{
   ws.on('message',async(order)=>{
     const frontendForm = JSON.parse(order);
-    const skillset = frontendForm.skillset.toString();
+    const skillset = frontendForm.skillset;
     const location = frontendForm.location.toString();
     const message = frontendForm.message.toString();
     const timestamp = frontendForm.date.toString();
     const from = frontendForm.from.toString();
-    const fromId = frontendForm.fromId.toString();
+    const fromId = frontendForm.fromId;
     const to = await ProcessOrder(fromId,skillset,location)
 
     try{
