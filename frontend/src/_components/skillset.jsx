@@ -1,7 +1,7 @@
 import { TextField } from '@material-ui/core';
 import React from 'react';
 
-const ListOfSkills = ({listOfSkillNumbers,skillset})=>{
+const ListOfSkills = ({listOfSkillNumbers,skillset,setSkillset})=>{
 	const listOfSkills = listOfSkillNumbers.map(
 		(elem,i)=>{
 			return(
@@ -12,7 +12,7 @@ const ListOfSkills = ({listOfSkillNumbers,skillset})=>{
 				key = {i}
 				onChange = {(e) =>{
 					e.preventDefault();
-					skillset[i]=e.target.value
+					setSkillset([...skillset,e.target.value])
 				}}
 				required
 				/>
