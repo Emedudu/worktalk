@@ -7,11 +7,11 @@ const MainScreenBoss = ({bossChatName,bossChatId})=>{
     const [skillsetNumber, setSkillsetNumber] =useState(0);
     const [location, setLocation] = useState('');
     const [message, setMessage] = useState(`I need you at location ${location}`)
+    const [skillset, setSkillset] = useState([])
     const from = bossChatName;
     const fromId = bossChatId;
 
     const listOfSkillNumbers = [];
-	const skillset = [];
 	for (let i = 0;i<skillsetNumber;i++){
 		listOfSkillNumbers.push(i);
 	
@@ -53,7 +53,11 @@ const MainScreenBoss = ({bossChatName,bossChatId})=>{
 					setSkillsetNumber(e.target.value)} 
 				}
 				required/>
-				{<ListOfSkills listOfSkillNumbers = {listOfSkillNumbers} skillset = {skillset}/>}
+				{<ListOfSkills 
+                listOfSkillNumbers = {listOfSkillNumbers} 
+                skillset = {skillset}
+                setSkillset = {setSkillset} 
+                />}
                 <TextField 
                 placeholder='Enter location'
                 variant = 'outlined'
