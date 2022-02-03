@@ -10,7 +10,7 @@ const ListOfSkills = ({listOfSkillNumbers,skillset,setSkillset})=>{
 				label = {`skill ${i+1}`}
 				type = 'text'
 				key = {i}
-				onChange = {(e) =>{
+				onBlur = {(e) =>{
 					e.preventDefault();
 					setSkillset([...skillset,e.target.value])
 				}}
