@@ -10,7 +10,7 @@ const MainScreenBoss = ({bossChatName,bossChatId})=>{
     const [skillset, setSkillset] = useState([])
     const from = bossChatName;
     const fromId = bossChatId;
-
+    
     const listOfSkillNumbers = [];
 	for (let i = 0;i<skillsetNumber;i++){
 		listOfSkillNumbers.push(i);
@@ -28,9 +28,6 @@ const MainScreenBoss = ({bossChatName,bossChatId})=>{
         }catch(err){console.log(err)}
         
     }
-    
-    
-    
     
     const getLocation = (e) => {
         e.preventDefault();
