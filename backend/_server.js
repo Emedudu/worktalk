@@ -2,8 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './connectdb.js';
-import { bossRouter, workerRouter } from './_routes/routes.js';
-import { connectServer } from './_controllers/webSocketController.js';
+import { userRouter } from './_routes/routes.js';
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;
@@ -12,10 +11,15 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use('/boss',bossRouter);
-app.use('/worker',workerRouter);
+app.use('/functions',userRouter)
 
-connectDB();
-
-
-connectServer(app.listen(PORT,console.log(`server is running on ${PORT}`)))
+const startServer=async()=>{
+    try{
+        await connectDB();
+        app.listen(PORT,console.log(`server is running on ${PORT}`))
+    
+    }catch(err){
+        console.log('Error Connecting to Database')
+    }
+}
+startServer()

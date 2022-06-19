@@ -1,22 +1,27 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
+import React, { useState } from 'react';
 
 const HomeScreen = () => {
+	const [isLogin,setIsLogin]=useState()
 	return(
-		<Container>
-			<Link to='/bossLogin'>
-				<Button variant = 'contained' color = 'primary'>
-					Boss
-				</Button>
-			</Link>
-			<Link to = '/workerLogin'>
-				<Button variant = 'contained' color = 'secondary'>
-					Worker
-				</Button>
-			</Link>
-		</Container>
-		)
+		<div>{isLogin?(
+			<div>
+				<input
+				placeholder='Enter e-mail'/>
+				<button>Login as Boss</button>
+				<button>Login as Worker</button>
+				<button onClick={(e)=>{setIsLogin(false)}}>Sign Up</button>
+			</div>
+			):(
+			<div>
+				<input
+				placeholder='Enter e-mail'/>
+				<button>Sign Up as Boss</button>
+				<button>Sign Up as Worker</button>
+				<button onClick={(e)=>{setIsLogin(true)}}>Login</button>
+			</div>
+			)
+		}
+		</div>
+    );
 }
 export default HomeScreen;

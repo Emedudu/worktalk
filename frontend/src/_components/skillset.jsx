@@ -1,28 +1,10 @@
-import { TextField } from '@material-ui/core';
-import React from 'react';
+import React from 'react'
 
-const ListOfSkills = ({listOfSkillNumbers,skillset,setSkillset})=>{
-	const listOfSkills = listOfSkillNumbers.map(
-		(elem,i)=>{
-			return(
-				<TextField
-				variant = 'outlined'
-				label = {`skill ${i+1}`}
-				type = 'text'
-				key = {i}
-				onBlur = {(e) =>{
-					e.preventDefault();
-					setSkillset([...skillset,e.target.value])
-				}}
-				required
-				/>
-			)
-		}
-	)
-    return(
-		<>
-			{listOfSkills}
-		</>
-	);
+const Skillset=()=>{
+	return(
+		<div>
+			
+		</div>
+    );
 }
-export default ListOfSkills;
+export default Skillset
