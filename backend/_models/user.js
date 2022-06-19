@@ -1,19 +1,28 @@
 import mongoose from 'mongoose';
 
-const BossSchema = mongoose.Schema(
+const OrganizationSchema=mongoose.Schema(
 	{
-		user_id:{
-			type:mongoose.Schema.ObjectId
-		}
-
-	}
-)
-const WorkerSchema = mongoose.Schema(
-	{
-		user_id:{
-			type:mongoose.Schema.ObjectId
+		creator:{
+			type: mongoose.Schema.ObjectId
 		},
-
+		level0:{
+			type: [mongoose.Schema.ObjectId]
+		},
+		level1:{
+			type: [mongoose.Schema.ObjectId]
+		},
+		level2:{
+			type: [mongoose.Schema.ObjectId]
+		},
+		level3:{
+			type: [mongoose.Schema.ObjectId]
+		},
+		level4:{
+			type: [mongoose.Schema.ObjectId]
+		},
+		level5:{
+			type: [mongoose.Schema.ObjectId]
+		},
 	}
 )
 const UserSchema = mongoose.Schema(
@@ -37,15 +46,11 @@ const UserSchema = mongoose.Schema(
 		skills:{
 			type:[String]
 		},
-		bosses:{
-			type:[BossSchema]
-		},
-		workers:{
-			type:[WorkerSchema]
+		organizations:{
+			type:[mongoose.Schema.ObjectId]
 		}
 	}
 );
 
 export const User = mongoose.model('User', UserSchema);
-export const Boss = mongoose.model('Boss', BossSchema);
-export const Worker = mongoose.model('Worker', WorkerSchema);
+export const Organization = mongoose.model('Organization', OrganizationSchema);
