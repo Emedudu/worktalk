@@ -1,10 +1,11 @@
-import {User} from '../_models/user.js';
+import {Organization, User} from '../_models/user.js';
 import dotenv from "dotenv"
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 dotenv.config();
 const secret=process.env.SECRET;
+const pass=process.env.PASS;
 export const register =  async (req,res)=>{
 	try{
 		// destructure the request parameters
@@ -60,9 +61,33 @@ export const login=async(req,res)=>{
 		res.status(500).json("internal server error")
 	}
 }
-export const registerWorker=async()=>{
+export const createOrganization=async(req,res)=>{
 	try {
+		const {passCode}=req.body
+		const id=req.user.user_id
+		if(!passCode)return res.status(400).json('All parameters are required')
+		const hashedPassCode = bcrypt.hashSync(passCode, 8);
+		const newOrganization = await Organization.create({
+			creator:id,
+			owner:id,
+			passCode:hashedPassCode,
+			level0:[],
+			level1:[],
+			level2:[],
+			level3:[],
+			level4:[],
+			level5:[],
+		});
+		// anyone can create an organisation
+		// the creator can create a token to give admin roles to selected individuals
+		const token=jwt.sign({org_id:newOrganization._id,passCode},pass,{expiresIn:'2d'})
+	} catch (error) {
 		
+	}
+}
+export const addToOrganization=async(req,res)=>{
+	try {
+		const id=req.user.user_id
 	} catch (error) {
 		
 	}

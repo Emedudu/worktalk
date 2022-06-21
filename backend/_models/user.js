@@ -5,6 +5,12 @@ const OrganizationSchema=mongoose.Schema(
 		creator:{
 			type: mongoose.Schema.ObjectId
 		},
+		owner:{
+			type: mongoose.Schema.ObjectId
+		},
+		passCode:{
+			type: String
+		},
 		level0:{
 			type: [mongoose.Schema.ObjectId]
 		},
