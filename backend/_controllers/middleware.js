@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 const secret=process.env.SECRET
-
+// const pass=process.env.PASS
 export const verifyToken = (req, res, next) => {
     const token =
     req.body.token || req.query.token || req.headers["x-access-token"];

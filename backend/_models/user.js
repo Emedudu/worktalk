@@ -2,6 +2,12 @@ import mongoose from 'mongoose';
 
 const OrganizationSchema=mongoose.Schema(
 	{
+		name:{
+			type: String
+		},
+		description:{
+			type: String
+		},
 		creator:{
 			type: mongoose.Schema.ObjectId
 		},
