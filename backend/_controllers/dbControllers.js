@@ -68,7 +68,7 @@ export const createOrganization=async(req,res)=>{
 		const {name,description,passCode}=req.body
 		const id=req.user.user_id
 		const email=req.user.email
-		if(!passCode)return res.status(400).json('All parameters are required')
+		if(!(name&&description&&passCode))return res.status(400).json('All parameters are required')
 		const hashedPassCode = bcrypt.hashSync(passCode, 8);
 		const newOrganization = await Organization.create({
 			name,
@@ -77,6 +77,7 @@ export const createOrganization=async(req,res)=>{
 			owner:id,
 			ownerEmail:email,
 			passCode:hashedPassCode,
+			skillPool:[],
 			level0:[],
 			level1:[],
 			level2:[],
@@ -134,7 +135,46 @@ export const changeParameter=async(req,res,next)=>{
 	}
 
 }
-export const addToOrganization=async(req,res)=>{
+export const addToOrganization=async(req,res,next)=>{
+	try {
+		const {user_id,email}=req.user
+		const {newComerEmail,organizationId}=req.body
+		if(!newComerEmail)return res.status(400).json("Enter email of new Employee")
+		const organization=await Organization.findById(organizationId)
+		if(!organization)return res.status(400).json("Organization does not exist")
+		if(organization.owner!=user_id)return res.status(400).json("You don't have the permission to add to organization")
+		// send email to recipient
+		try {
+			// message the person
+			await sendMail(newComerEmail,`Invitation to join ${organization.name}`,htmlCode(organization.name,organizationId))
+			res.status(200).json("Invitation sent")	
+		} catch (error) {
+			res.status(400).json("Unable to send invitation")
+		}
+	} catch (error) {
+		res.status(500).json("Internal Server Error")
+	}
+}
+export const acceptInvite=async(req,res,next)=>{
+	try {
+		const {organizationId,level}=req.body
+		let leve=level
+		if(!leve){leve="level5"}
+		const {user_id,email}=req.user
+		const user=await User.findById(user_id)
+		await User.findByIdAndUpdate(user_id,{organizations:[...user.organizations,organizationId]})
+		const organization=await Organization.findById(organizationId)
+		await Organization.findByIdAndUpdate(organizationId,{
+			skillPool:new Set(organization.skillPool.concat(user.skills)),
+			[`${leve}`]:!(organization[`${leve}`].includes(user_id))&&[...organization[`${leve}`],user_id]
+		})
+		res.status(200).json('Congratulations, You are now part of the Organization')
+	} catch (error) {
+		res.status(500).json('Internal Server Error')
+	}
+}
+// TODO: implement this function
+export const promoteEmployee=async(req,res,next)=>{
 	try {
 		const {user_id,email}=req.user
 		const {newComerEmail,organizationId}=req.body
@@ -153,14 +193,15 @@ export const addToOrganization=async(req,res)=>{
 		res.status(500).json("Internal Server Error")
 	}
 }
-export const acceptInvite=async(req,res,next)=>{
+// TODO: implement this function
+export const acceptPromotion=async(req,res,next)=>{
 	try {
 		const {organizationId,level}=req.body
 		let leve=level
 		if(!leve){leve="level5"}
 		const {user_id,email}=req.user
 		const organization=await Organization.findById(organizationId)
-		await Organization.findByIdAndUpdate(organizationId,{[`${leve}`]:[...organization[`${leve}`],user_id]})
+		await Organization.findByIdAndUpdate(organizationId,{[`${leve}`]:!(organization[`${leve}`].includes(user_id))&&[...organization[`${leve}`],user_id]})
 		const user=await User.findById(user_id)
 		await User.findByIdAndUpdate(user_id,{organizations:[...user.organizations,organizationId]})
 		res.status(200).json('Congratulations, You are now part of the Organization')
@@ -168,7 +209,6 @@ export const acceptInvite=async(req,res,next)=>{
 		res.status(500).json('Internal Server Error')
 	}
 }
-
 // TODO: implement this function
 export const sellOwnerRight=async(req,res,next)=>{
 	// buyer is an id may later change to email

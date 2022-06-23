@@ -17,6 +17,9 @@ const OrganizationSchema=mongoose.Schema(
 		passCode:{
 			type: String
 		},
+		skillPool:{
+			type: [String]
+		},
 		level0:{
 			type: [mongoose.Schema.ObjectId]
 		},
@@ -49,10 +52,6 @@ const UserSchema = mongoose.Schema(
 		},
 		password:{
 			type: String,
-			required: true
-		},
-		location:{
-			type: [String],
 			required: true
 		},
 		skills:{
