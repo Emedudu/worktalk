@@ -43,6 +43,22 @@ const OrganizationSchema=mongoose.Schema(
 		},
 	}
 )
+const MessageSchema=mongoose.Schema(
+	{
+		from:{
+			type: mongoose.Schema.ObjectId,
+		},
+		to:{
+			type: [mongoose.Schema.ObjectId]
+		},
+		message:{
+			type: String
+		},
+		timestamp:{
+			type: Number
+		}
+	}
+)
 const UserSchema = mongoose.Schema(
 	{
 		email:{
@@ -68,3 +84,4 @@ const UserSchema = mongoose.Schema(
 
 export const User = mongoose.model('User', UserSchema);
 export const Organization = mongoose.model('Organization', OrganizationSchema);
+export const Message = mongoose.model('Message', MessageSchema);
