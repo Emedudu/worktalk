@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { sendMail } from './orderProcessor.js';
-import { htmlCode } from '../constants.js';
+import { htmlJoin, htmlQuit } from '../constants.js';
 
 dotenv.config();
 const secret=process.env.SECRET;
@@ -78,6 +78,7 @@ export const createOrganization=async(req,res)=>{
 			ownerEmail:email,
 			passCode:hashedPassCode,
 			skillPool:[],
+			allMembers:[],
 			level0:[],
 			level1:[],
 			level2:[],
@@ -138,15 +139,16 @@ export const changeParameter=async(req,res,next)=>{
 export const addToOrganization=async(req,res,next)=>{
 	try {
 		const {user_id,email}=req.user
-		const {newComerEmail,organizationId}=req.body
+		const {newComerEmail,newComerId,organizationId}=req.body
 		if(!newComerEmail)return res.status(400).json("Enter email of new Employee")
 		const organization=await Organization.findById(organizationId)
 		if(!organization)return res.status(400).json("Organization does not exist")
 		if(organization.owner!=user_id)return res.status(400).json("You don't have the permission to add to organization")
 		// send email to recipient
 		try {
+			if(organization.allMembers.includes(newComerId))return res.status(400).json("This user is already part of the organization")
 			// message the person
-			await sendMail(newComerEmail,`Invitation to join ${organization.name}`,htmlCode(organization.name,organizationId))
+			await sendMail(newComerEmail,`Invitation to join ${organization.name}`,htmlJoin(organization.name,organizationId))
 			res.status(200).json("Invitation sent")	
 		} catch (error) {
 			res.status(400).json("Unable to send invitation")
@@ -161,14 +163,59 @@ export const acceptInvite=async(req,res,next)=>{
 		let leve=level
 		if(!leve){leve="level5"}
 		const {user_id,email}=req.user
-		const user=await User.findById(user_id)
-		await User.findByIdAndUpdate(user_id,{organizations:[...user.organizations,organizationId]})
+		try {
+			const user=await User.findById(user_id)
+			await User.findByIdAndUpdate(user_id,{organizations:[...user.organizations,organizationId]})
+			const organization=await Organization.findById(organizationId)
+			await Organization.findByIdAndUpdate(organizationId,{
+				skillPool:[...new Set(organization.skillPool.concat(user.skills))],
+				allMembers:[...organization.allMembers,newComerId],
+				[`${leve}`]:[...organization[`${leve}`],newComerId]
+			})
+			res.status(200).json('Congratulations, You are now part of the Organization')		
+		} catch (error) {
+			res.status(400).json("Unable to update information")
+		}
+	} catch (error) {
+		res.status(500).json('Internal Server Error')
+	}
+}
+export const quitOrganization=async(req,res,next)=>{
+	try {
+		const {user_id,email}=req.user
+		const {organizationId,level}=req.body
+		if(!(organizationId&&level))return res.status(400).json("All params are required")
+		try {
+			const user=await User.findById(user_id)
+			await User.findByIdAndUpdate(user_id,{organizations:user.organizations.filter(org_id=>org_id!=organizationId)})
+			const organization=await Organization.findById(organizationId)
+			const orgOwner=await User.findById(organization.owner)
+			await sendMail(orgOwner.email,`Request to quit ${organization.name}`,htmlQuit())
+			res.status(200).json("Request sent")	
+		} catch (error) {
+			res.status(400).json("Unable to quit organization")
+		}
+	} catch (error) {
+		res.status(500).json("Internal Server Error")
+	}
+}
+export const removeEmployee=async(req,res,next)=>{
+	try {
+		const {user_id,email}=req.user
+		const {organizationId,employeeId,level}=req.body
+		let leve=level
+		if(!(employeeId&&leve))return res.status(400).json("User id and level required")
 		const organization=await Organization.findById(organizationId)
-		await Organization.findByIdAndUpdate(organizationId,{
-			skillPool:new Set(organization.skillPool.concat(user.skills)),
-			[`${leve}`]:!(organization[`${leve}`].includes(user_id))&&[...organization[`${leve}`],user_id]
-		})
-		res.status(200).json('Congratulations, You are now part of the Organization')
+		if(organization.owner!=user_id)return res.status(400).json("Only Owner of this organization can change information")
+		try {
+			await Organization.findByIdAndUpdate(organizationId,{
+				allMembers:organization.allMembers.filter(empId=>empId!=employeeId),
+				[`${leve}`]:organization[`${leve}`].filter(empId=>empId!=employeeId)
+			})
+			res.status(200).json('You have successfully removed this worker from the organization')		
+		} catch (error) {
+			res.status(400).json("Unable to update information")
+		}
 	} catch (error) {
 		res.status(500).json('Internal Server Error')
 	}
@@ -200,7 +247,8 @@ export const acceptPromotion=async(req,res,next)=>{
 		let leve=level
 		if(!leve){leve="level5"}
 		const {user_id,email}=req.user
-		const organization=await Organization.findById(organizationId)
+		// const organization=await Organization.findById(organizationId)
+
 		await Organization.findByIdAndUpdate(organizationId,{[`${leve}`]:!(organization[`${leve}`].includes(user_id))&&[...organization[`${leve}`],user_id]})
 		const user=await User.findById(user_id)
 		await User.findByIdAndUpdate(user_id,{organizations:[...user.organizations,organizationId]})

@@ -20,6 +20,9 @@ const OrganizationSchema=mongoose.Schema(
 		skillPool:{
 			type: [String]
 		},
+		allMembers:{
+			type:[mongoose.Schema.ObjectId]
+		},
 		level0:{
 			type: [mongoose.Schema.ObjectId]
 		},
