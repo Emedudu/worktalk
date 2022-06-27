@@ -1,13 +1,8 @@
-import {Organization, User} from '../_models/user.js';
-import dotenv from "dotenv"
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { sendMail } from './orderProcessor.js';
+import {Message, Organization, User} from '../_models/models.js';
+import { hashPassword, sendMail, signToken, validatePassword } from './orderProcessor.js';
 import { htmlJoin, htmlQuit } from '../constants.js';
+import mongoose from "mongoose"
 
-dotenv.config();
-const secret=process.env.SECRET;
-const pass=process.env.PASS;
 export const register =  async (req,res)=>{
 	try{
 		// destructure the request parameters
@@ -17,8 +12,7 @@ export const register =  async (req,res)=>{
 		// require the email does not exist
 		const exists=await User.findOne({email})
 		if (exists) return res.status(400).json('User Already Exists')
-		// hash the password
-		const hashedPassword = bcrypt.hashSync(password, 8);
+		const hashedPassword=hashPassword(password)
 		// create the user
 		const newUser = await User.create({
 			email,
@@ -29,14 +23,7 @@ export const register =  async (req,res)=>{
 			organizations:[],
 			timestamp:Date.now()
 		});
-		// create a jwt token
-		const token = jwt.sign(
-			{ user_id: newUser._id, email },
-			secret,
-			{
-				expiresIn: "2h",
-			}
-		);
+		const token=signToken(newUser._id,email)
 		// send the token to the user
 		return res.status(200).json({auth:true,token});
 	}catch(err){
@@ -49,15 +36,26 @@ export const login=async(req,res)=>{
 		const user=await User.findOne({email})
 		if (!user) return res.status(404).json('No User Found')
 
-		const passwordIsValid = bcrypt.compareSync(password, user.password);
+		const passwordIsValid = validatePassword(password, user.password);
 		if (!passwordIsValid) return res.status(401).send({ auth: false });
 	
-		const token = jwt.sign({ user_id: user._id }, secret, {
-			expiresIn: '2h' // expires in 2 hours
-		});
+		const token=signToken(newUser._id,email)
 		res.status(200).json({ auth: true, token});
 	} catch (error) {
 		res.status(500).json("internal server error")
+	}
+}
+export const deleteUser=async(req,res,next)=>{
+	try {
+		const {user_id,email}=req.user
+		const {password}=req.body
+		const user=await User.findById(user_id)
+		if(!user)return res.status(400).json("User does not exist")
+		const passwordIsValid=validatePassword(password, user.password)
+		if(!passwordIsValid)return res.status(401),send("Incorrect password")
+		res.status(200).json("User deleted successfully")
+	} catch (error) {
+		res.status(500).json("Internal Server Error")
 	}
 }
 export const createOrganization=async(req,res)=>{
@@ -66,7 +64,7 @@ export const createOrganization=async(req,res)=>{
 		const id=req.user.user_id
 		const email=req.user.email
 		if(!(name&&description&&passCode))return res.status(400).json('All parameters are required')
-		const hashedPassCode = bcrypt.hashSync(passCode, 8);
+		const hashedPassCode = hashPassword(passCode)
 		const newOrganization = await Organization.create({
 			name,
 			description,
@@ -95,6 +93,21 @@ export const createOrganization=async(req,res)=>{
 		res.status(500).json("Internal Server Error")
 	}
 }
+export const deleteOrganization=async(req,res,next)=>{
+	const {user_id,email}=req.user
+	const {organizationId,passCode}=req.body
+	try{
+		const organization=await Organization.findById(organizationId)
+		if(organization.owner!=user_id)return res.status(400).json("You are not allowed to delete this organization")
+		const passwordIsValid = validatePassword(passCode, organization.passCode);
+		if (!passwordIsValid) return res.status(401).send("Incorrect passcode");
+		await Organization.findByIdAndDelete(organizationId)
+		res.status(200).json("Deleted Organization Successfully")
+	}catch(error){
+		res.status(500).json("Unable to Delete organization")
+	}
+
+}
 export const changePassCode=async(req,res,next)=>{
 	const {formerPassCode,newPassCode,organizationId}=req.body;
 	const {user_id,email}=req.user
@@ -108,10 +121,10 @@ export const changePassCode=async(req,res,next)=>{
 		}
 		res.status(400).json('Incorrect Email')
 	}
-	const passCodeIsValid = bcrypt.compareSync(formerPassCode, organization.passCode);
+	const passCodeIsValid = validatePassword(formerPassCode, organization.passCode);
 	if (!passCodeIsValid) return res.status(401).json('incorrect passCode');
 	if(!newPassCode)return res.status(400).json('A new passcode is required')
-	const hashedPassCode = bcrypt.hashSync(newPassCode, 8);
+	const hashedPassCode = hashPassword(newPassCode)
 	try {
 		await Organization.findByIdAndUpdate(organizationId,{passCode:hashedPassCode})
 		res.status(200).json('Password updated successfully')
@@ -216,6 +229,23 @@ export const removeEmployee=async(req,res,next)=>{
 		}
 	} catch (error) {
 		res.status(500).json('Internal Server Error')
+	}
+}
+export const message=async(req,res,next)=>{
+	const {user_id,email}=req.user;
+	const {to,message}=req.body;
+	const ObjectId = mongoose.Types.ObjectId;
+	const objId = new ObjectId(to);
+	try {
+		const newMessage=await Message.create({
+			from:user_id,
+			to:objId,
+			message,
+			timestamp:Date.now()
+		})
+		res.status(200).json("Message sent successfully")
+	} catch (error) {
+		res.status(500).json("Internal Server Error")
 	}
 }
 // TODO: implement this function

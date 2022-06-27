@@ -1,10 +1,13 @@
-import { Message, Organization, User } from "../_models/user.js"
-import mongoose from "mongoose"
+import { Message, Organization, User } from "../_models/models.js"
 import nodemailer from "nodemailer"
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { google } from "googleapis"
 import dotenv from "dotenv";
+
 const OAuth2 = google.auth.OAuth2;
 dotenv.config()
+const secret=process.env.SECRET;
 
 export const getState=async(req,res)=>{
 	try {
@@ -20,7 +23,6 @@ export const getState=async(req,res)=>{
 		res.status(500).json("internal server error")
 	}
 }
-
 export const sendMail=(email,subject,file)=>{
 	const createTransporter = async () => {
 		const oauth2Client = new OAuth2(
@@ -73,24 +75,24 @@ export const sendMail=(email,subject,file)=>{
 	from: process.env.EMAIL
 	});
 }
-
-// TODO: implement this function
-export const message=async(req,res,next)=>{
-	const {user_id,email}=req.user;
-	const {to,message}=req.body;
-	const ObjectId = mongoose.Types.ObjectId;
-	const objId = new ObjectId(to);
-	try {
-		const newMessage=await Message.create({
-			from:user_id,
-			to:objId,
-			message,
-			timestamp:Date.now()
-		})
-		res.status(200).json("Message sent successfully")
-	} catch (error) {
-		res.status(500).json("Internal Server Error")
-	}
+export const signToken=(user_id,email)=>{
+	// create a jwt token
+	const token = jwt.sign(
+		{ user_id, email },
+		secret,
+		{
+			expiresIn: "2h",
+		}
+	);
+	return token
+}
+export const hashPassword=(password)=>{
+	// hash the password
+	const hashedPassword = bcrypt.hashSync(password, 8);
+	return hashedPassword
+}
+export const validatePassword=(password,hashedPassword)=>{
+	return bcrypt.compareSync(password, hashedPassword)
 }
 export const getMessages=async(req,res,next)=>{
 	const {user_id,email}=req.user;
@@ -98,8 +100,8 @@ export const getMessages=async(req,res,next)=>{
 	try{
 		const messages=await Message.find({
 			$or:[
-				{from:user_id},
-				{from:to}
+				{from:user_id,to:to},
+				{from:to,to:user_id}
 			]
 		}
 		)
