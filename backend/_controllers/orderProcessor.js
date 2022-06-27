@@ -1,4 +1,5 @@
-import { Organization, User } from "../_models/user.js"
+import { Message, Organization, User } from "../_models/user.js"
+import mongoose from "mongoose"
 import nodemailer from "nodemailer"
 import { google } from "googleapis"
 import dotenv from "dotenv";
@@ -74,10 +75,39 @@ export const sendMail=(email,subject,file)=>{
 }
 
 // TODO: implement this function
-export const message=(req,res,next)=>{
-
+export const message=async(req,res,next)=>{
+	const {user_id,email}=req.user;
+	const {to,message}=req.body;
+	const ObjectId = mongoose.Types.ObjectId;
+	const objId = new ObjectId(to);
+	try {
+		const newMessage=await Message.create({
+			from:user_id,
+			to:objId,
+			message,
+			timestamp:Date.now()
+		})
+		res.status(200).json("Message sent successfully")
+	} catch (error) {
+		res.status(500).json("Internal Server Error")
+	}
 }
-
+export const getMessages=async(req,res,next)=>{
+	const {user_id,email}=req.user;
+	const {to}=req.body
+	try{
+		const messages=await Message.find({
+			$or:[
+				{from:user_id},
+				{from:to}
+			]
+		}
+		)
+		return res.status(200).json(messages)
+	}catch(error){
+		res.status(500).json("Internal Server Error")
+	}
+}
 
 
 // LATER.....

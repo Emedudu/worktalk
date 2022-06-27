@@ -1,7 +1,7 @@
 import express from 'express';
 import { register,login, addToOrganization, createOrganization, changePassCode, acceptInvite, changeParameter, quitOrganization, removeEmployee } from '../_controllers/dbControllers.js';
 import { verifyToken } from '../_controllers/middleware.js';
-import { getState } from '../_controllers/orderProcessor.js';
+import { getMessages, getState, message } from '../_controllers/orderProcessor.js';
 
 export const userRouter = express.Router();
 
@@ -15,6 +15,8 @@ userRouter.route('/addToOrganization').post(verifyToken,addToOrganization)
 userRouter.route('/acceptInvite').post(verifyToken,acceptInvite)
 userRouter.route('/quitOrganization').delete(verifyToken,quitOrganization)
 userRouter.route('/removeEmployee').delete(verifyToken,removeEmployee)
+userRouter.route('/message').post(verifyToken,message)
+userRouter.route('/getMessages').post(verifyToken,getMessages)
 // route for boss only 
 // userRouter.route('/registerEmployee'.post(registerEmployee))
 

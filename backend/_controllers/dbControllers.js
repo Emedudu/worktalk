@@ -13,14 +13,10 @@ export const register =  async (req,res)=>{
 		// destructure the request parameters
 		const {email,name,password,location} = req.body;
 		// make sure all required params are given
-		if (!(email && name && password && location)) {
-			res.status(400).send("All params required");
-		}
+		if (!(email && name && password && location))return res.status(400).send("All params required");
 		// require the email does not exist
 		const exists=await User.findOne({email})
-		if (exists){
-			res.status(400).json('User Already Exists')
-		}
+		if (exists) return res.status(400).json('User Already Exists')
 		// hash the password
 		const hashedPassword = bcrypt.hashSync(password, 8);
 		// create the user
@@ -30,7 +26,8 @@ export const register =  async (req,res)=>{
 			password:hashedPassword,
 			location,
 			skills:[],
-			organizations:[]
+			organizations:[],
+			timestamp:Date.now()
 		});
 		// create a jwt token
 		const token = jwt.sign(
@@ -41,7 +38,7 @@ export const register =  async (req,res)=>{
 			}
 		);
 		// send the token to the user
-		res.status(200).json({auth:true,token});
+		return res.status(200).json({auth:true,token});
 	}catch(err){
 		res.status(400);
 	}
@@ -85,6 +82,7 @@ export const createOrganization=async(req,res)=>{
 			level3:[],
 			level4:[],
 			level5:[],
+			timestamp:Date.now()
 		});
 		// add organization to User document
 		const user=await User.findById(id)

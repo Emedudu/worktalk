@@ -41,6 +41,9 @@ const OrganizationSchema=mongoose.Schema(
 		level5:{
 			type: [mongoose.Schema.ObjectId]
 		},
+		timestamp:{
+			type: Number
+		}
 	}
 )
 const MessageSchema=mongoose.Schema(
@@ -78,6 +81,9 @@ const UserSchema = mongoose.Schema(
 		},
 		organizations:{
 			type:[mongoose.Schema.ObjectId]
+		},
+		timestamp:{
+			type: Number
 		}
 	}
 );
