@@ -150,7 +150,7 @@ export const changeParameter=async(req,res,next)=>{
 export const addToOrganization=async(req,res,next)=>{
 	try {
 		const {user_id,email}=req.user
-		const {newComerEmail,newComerId,organizationId}=req.body
+		const {newComerEmail,newComerId,organizationId,note}=req.body
 		if(!newComerEmail)return res.status(400).json("Enter email of new Employee")
 		const organization=await Organization.findById(organizationId)
 		if(!organization)return res.status(400).json("Organization does not exist")
@@ -159,6 +159,13 @@ export const addToOrganization=async(req,res,next)=>{
 		try {
 			if(organization.allMembers.includes(newComerId))return res.status(400).json("This user is already part of the organization")
 			// message the person
+			const newMessage=await Message.create({
+				from:user_id,
+				to:newComerId,
+				message:note,
+				group:false,
+				timestamp:Date.now()
+			})
 			await sendMail(newComerEmail,`Invitation to join ${organization.name}`,htmlJoin(organization.name,organizationId))
 			res.status(200).json("Invitation sent")	
 		} catch (error) {
@@ -233,61 +240,103 @@ export const removeEmployee=async(req,res,next)=>{
 }
 export const message=async(req,res,next)=>{
 	const {user_id,email}=req.user;
-	const {to,message}=req.body;
+	const {to,message,isUser}=req.body;
 	const ObjectId = mongoose.Types.ObjectId;
 	const objId = new ObjectId(to);
+	let recipient
+	if (isUser){
+		recipient=await User.findById(objId)
+		if(!recipient)return res.status(400).json("This user does not exist")
+	}else{
+		recipient=await Organization.findById(objId)
+		if(!recipient)return res.status(400).json("This organization does not exist")
+	}
 	try {
 		const newMessage=await Message.create({
 			from:user_id,
 			to:objId,
 			message,
+			group:!isUser,
 			timestamp:Date.now()
 		})
+		await sendMail(recipient.email,`Message for you`,htmlMessage(recipient.name))
 		res.status(200).json("Message sent successfully")
 	} catch (error) {
 		res.status(500).json("Internal Server Error")
 	}
 }
-// TODO: implement this function
 export const promoteEmployee=async(req,res,next)=>{
 	try {
 		const {user_id,email}=req.user
-		const {newComerEmail,organizationId}=req.body
-		if(!newComerEmail)return res.status(400).json("Enter email of new Employee")
+		const {employeeId,organizationId,currentLevel,nextLevel,note}=req.body
+		const employee=await User.findById(employeeId)
+		if(!employee)return res.status(400).json("User does not exist")
 		const organization=await Organization.findById(organizationId)
 		if(!organization)return res.status(400).json("Organization does not exist")
-		if(organization.owner!=user_id)return res.status(400).json("You don't have the permission to add to organization")
+		if(organization.owner!=user_id)return res.status(400).json("You don't have the permission to promote employees")
 		// send email to recipient
 		try {
-			await sendMail(newComerEmail,`Invitation to join ${organization.name}`,htmlCode(organization.name,organizationId))
-			res.status(200).json("Invitation sent")	
+			Organization.findByIdAndUpdate(organizationId,{
+				allMembers:organization.allMembers.filter((member)=>member!=employeeId),
+				[currentLevel]:organization[currentLevel].filter((member)=>member!=employeeId),
+				[nextLevel]:[...organization[nextLevel],employeeId]
+			})
+			const newMessage=await Message.create({
+				from:user_id,
+				to:employeeId,
+				message:note,
+				group:false,
+				timestamp:Date.now()
+			})
+			await sendMail(employee.email,`${organization.name} has a message for you`,htmlMessage(employee.name))
+			res.status(200).json("Employee Promoted")	
 		} catch (error) {
-			res.status(400).json("Unable to send invitation")
+			res.status(400).json("Unable to promote employee")
 		}
 	} catch (error) {
 		res.status(500).json("Internal Server Error")
 	}
 }
-// TODO: implement this function
-export const acceptPromotion=async(req,res,next)=>{
+export const transferOwnership=async(req,res,next)=>{
+	// buyer is an id may later change to email
+	const {user_id,email}=req.user
+	const {buyerId,organizationId,passCode}=req.body
+	const organization=Organization.findById(organizationId)
+	if(!organization)return res.status(400).json("This organization does not exist")
+	if(organization.owner!=user_id)return res.status(400).json("You are not the owner of this organization")
+	const passCodeIsValid=validatePassword(passCode,organization.passCode)
+	if(!passCodeIsValid)return res.status(400).json("Incorrect passcode")
 	try {
-		const {organizationId,level}=req.body
-		let leve=level
-		if(!leve){leve="level5"}
-		const {user_id,email}=req.user
-		// const organization=await Organization.findById(organizationId)
-
-		await Organization.findByIdAndUpdate(organizationId,{[`${leve}`]:!(organization[`${leve}`].includes(user_id))&&[...organization[`${leve}`],user_id]})
-		const user=await User.findById(user_id)
-		await User.findByIdAndUpdate(user_id,{organizations:[...user.organizations,organizationId]})
-		res.status(200).json('Congratulations, You are now part of the Organization')
+		Organization.findByIdAndUpdate(organizationId,{
+			owner:buyerId
+		})
+		res.status(200).json("You are no longer the owner of this organization")
 	} catch (error) {
-		res.status(500).json('Internal Server Error')
+		res.status(500).json("Internal Server Error")
+	}
+}
+export const updateUserParams=async(req,res,next)=>{
+	const {user_id,email}=req.user
+	const {field,value}=req.body
+	if(!([skills,organizations].includes(field)))return res.status(400).json("Bad Request")
+	try{
+		await User.findByIdAndUpdate(user_id,{
+			[field]:value
+		})	
+	}catch(error){
+		res.status(500).json("Unable to update parameters")
 	}
 }
 // TODO: implement this function
-export const sellOwnerRight=async(req,res,next)=>{
-	// buyer is an id may later change to email
-	const {buyer}=req.body
-
+export const forgotPassword=async(req,res,next)=>{
+	const {email}=req.body
+	const userFound=await User.find({email})
+	if(!userFound)return res.status(400).json("Email is invalid")
+	// change the user password
+	const placeHolder=`${Math.random()*1000000}`
+	User.updateOne({email:userEmail},)
+	sendMail(userEmail,"Reset Password",htmlResetPassword(userEmail.name,placeHolder))
 }
+// Former owner can use the quitOrganization function
+// Write a function for forgotPassword
+// Write a function for update user parameters. Probably update skill pool of the organizations later

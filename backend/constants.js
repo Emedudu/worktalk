@@ -16,3 +16,19 @@ export const htmlQuit=()=>{
         `
     )
 }
+export const htmlMessage=(recipient)=>{
+    return(
+        `
+        <h3>This message is for ${recipient}</h3>
+        <a href="frontend acceptInvites route">Click Here to view</a>
+        `
+    )
+}
+export const htmlResetPassword=(recipient, loginCode)=>{
+    return(
+        `
+        <h3>This message is for ${recipient}</h3>
+        <p>Here is your login code  ${loginCode}</p>
+        `
+    )
+}

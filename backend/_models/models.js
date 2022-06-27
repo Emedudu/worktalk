@@ -57,6 +57,9 @@ const MessageSchema=mongoose.Schema(
 		message:{
 			type: String
 		},
+		group:{
+			type: Boolean
+		},
 		timestamp:{
 			type: Number
 		}
