@@ -39,3 +39,14 @@
     transform: rotate(360deg);
   }
 }
+
+.full-screen{
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.full-flex{
+  display:flex;
+}

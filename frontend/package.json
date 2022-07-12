@@ -4,6 +4,7 @@
   "description": "Web3 Starter Kit",
   "author": "Emeduduna Akerejola",
   "dependencies": {
+    "axios": "^0.27.2",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-es2015": "6.24.1",
@@ -34,5 +35,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "proxy": "http://localhost:8001/"
 }

@@ -1,27 +1,20 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React from 'react';
+import { useEffect } from 'react';
+import Navigation from '../_components/Navigation';
+import { getState } from '../_requests';
 
-const HomeScreen = () => {
-	const [isLogin,setIsLogin]=useState()
-	return(
-		<div>{isLogin?(
-			<div>
-				<input
-				placeholder='Enter e-mail'/>
-				<button>Login as Boss</button>
-				<button>Login as Worker</button>
-				<button onClick={(e)=>{setIsLogin(false)}}>Sign Up</button>
-			</div>
-			):(
-			<div>
-				<input
-				placeholder='Enter e-mail'/>
-				<button>Sign Up as Boss</button>
-				<button>Sign Up as Worker</button>
-				<button onClick={(e)=>{setIsLogin(true)}}>Login</button>
-			</div>
-			)
-		}
-		</div>
+const HomeScreen=(props)=>{
+    const token=localStorage.getItem('token')
+    useEffect(()=>{
+        getState(token)
+            .then((res)=>console.log(res.data))
+    })
+    return (
+        <div>
+            <Navigation/>
+        </div>
     );
 }
+
 export default HomeScreen;

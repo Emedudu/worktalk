@@ -2,6 +2,11 @@ import {Message, Organization, User} from '../_models/models.js';
 import { hashPassword, sendMail, signToken, validatePassword } from './orderProcessor.js';
 import { htmlJoin, htmlQuit } from '../constants.js';
 import mongoose from "mongoose"
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+
+dotenv.config()
+const secret=process.env.SECRET
 
 export const register =  async (req,res)=>{
 	try{
@@ -32,15 +37,21 @@ export const register =  async (req,res)=>{
 }
 export const login=async(req,res)=>{
 	try {
+		const token =
+		req.body.token || req.query.token || req.headers["x-access-token"];
 		const {email,password}=req.body
+		if(token){
+			const decoded = jwt.verify(token, secret);
+			decoded&&res.status(200).json({ auth: true, token});
+		}
 		const user=await User.findOne({email})
 		if (!user) return res.status(404).json('No User Found')
 
 		const passwordIsValid = validatePassword(password, user.password);
 		if (!passwordIsValid) return res.status(401).send({ auth: false });
 	
-		const token=signToken(newUser._id,email)
-		res.status(200).json({ auth: true, token});
+		const newToken=signToken(newUser._id,email)
+		res.status(200).json({ auth: true, newToken});
 	} catch (error) {
 		res.status(500).json("internal server error")
 	}
