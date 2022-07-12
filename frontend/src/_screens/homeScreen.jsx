@@ -1,10 +1,12 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import Navigation from '../_components/Navigation';
+import SideBar from '../_components/SideBar';
 import { getState } from '../_requests';
 
 const HomeScreen=(props)=>{
+    const [sideBar,setSideBar]=useState(false)
     const token=localStorage.getItem('token')
     useEffect(()=>{
         getState(token)
@@ -12,7 +14,8 @@ const HomeScreen=(props)=>{
     })
     return (
         <div>
-            <Navigation/>
+            <Navigation sideBar={sideBar} setSideBar={setSideBar}/>
+            {sideBar&&<SideBar/>}
         </div>
     );
 }
