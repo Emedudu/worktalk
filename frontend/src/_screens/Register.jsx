@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Register=({setMessage,setIsSignedIn})=>{
+const Register=({notification,setNotification,setIsSignedIn})=>{
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [name,setName]=useState('')
@@ -17,10 +17,15 @@ const Register=({setMessage,setIsSignedIn})=>{
                 if(res.data.auth){
                     localStorage.setItem('token',res.data.token)
                     setIsSignedIn(true)
+                    setNotification([...notification,'Registered successfully'])
                     navigate('/home');
                 }else{
-                    setMessage('Error Registering')
+                    setNotification([...notification,'Error Registering'])
                 }
+            })
+            .catch((err)=>{
+                console.log(err)
+                setNotification([...notification,'Error Registering'])
             })
     }
     return (

@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Login({setMessage,setIsSignedIn}) {
+function Login({notification,setNotification,setIsSignedIn}) {
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
@@ -14,12 +14,18 @@ function Login({setMessage,setIsSignedIn}) {
                 if(res.data.auth){
                     localStorage.setItem('token',res.data.token)
                     setIsSignedIn(true)
+                    setNotification([...notification,'Logged in successfully'])
                     navigate('/home');
                 }else{
-                    setMessage('Error Logging in')
+                    setNotification([...notification,'Error Logging in'])
                 }
             })
-    }
+            .catch((err)=>{
+                console.log(err)
+                setNotification([...notification,'Error logging in'])
+            })
+            
+        }
     return (
         <div>
             <input

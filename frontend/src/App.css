@@ -39,3 +39,10 @@
     transform: rotate(360deg);
   }
 }
+
+.bg-glassy{
+  background-color: rgb(250, 240, 228);
+}
+.cursor-pointer{
+  cursor:pointer;
+}
