@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Register=({setMessage})=>{
+const Register=({setMessage,setIsSignedIn})=>{
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [name,setName]=useState('')
@@ -16,6 +16,7 @@ const Register=({setMessage})=>{
             .then((res)=>{
                 if(res.data.auth){
                     localStorage.setItem('token',res.data.token)
+                    setIsSignedIn(true)
                     navigate('/home');
                 }else{
                     setMessage('Error Registering')
@@ -57,7 +58,6 @@ const Register=({setMessage})=>{
             onClick={register}>
                 REGISTER
             </button>
-            <Link to='/'>Login</Link>
         </div>
     );
 }

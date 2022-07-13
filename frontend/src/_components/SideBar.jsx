@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function SideBar() {
+    useEffect(()=>{
+        
+    })
     return (
         <div>
             hello world

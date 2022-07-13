@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function Login({setMessage}) {
+function Login({setMessage,setIsSignedIn}) {
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
@@ -13,6 +13,7 @@ function Login({setMessage}) {
             .then((res)=>{
                 if(res.data.auth){
                     localStorage.setItem('token',res.data.token)
+                    setIsSignedIn(true)
                     navigate('/home');
                 }else{
                     setMessage('Error Logging in')
@@ -40,7 +41,6 @@ function Login({setMessage}) {
             onClick={login}>
                 LOGIN
             </button>
-            <Link to='/register'>Register</Link>
         </div>
     );
 }

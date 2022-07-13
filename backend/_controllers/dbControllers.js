@@ -40,18 +40,24 @@ export const login=async(req,res)=>{
 		const token =
 		req.body.token || req.query.token || req.headers["x-access-token"];
 		const {email,password}=req.body
-		if(token){
-			const decoded = jwt.verify(token, secret);
-			decoded&&res.status(200).json({ auth: true, token});
+		if(!(email&&password)){
+			if(token){
+				try {
+					jwt.verify(token, secret);
+					res.status(200).json({ auth: true, token});
+				} catch (error) {
+					res.status(401).json('Session expired')
+				}
+			}
 		}
 		const user=await User.findOne({email})
 		if (!user) return res.status(404).json('No User Found')
-
+		
 		const passwordIsValid = validatePassword(password, user.password);
 		if (!passwordIsValid) return res.status(401).send({ auth: false });
-	
-		const newToken=signToken(newUser._id,email)
-		res.status(200).json({ auth: true, newToken});
+		
+		const newToken=signToken(user._id,email)
+		res.status(200).json({ auth: true, token: newToken});
 	} catch (error) {
 		res.status(500).json("internal server error")
 	}
