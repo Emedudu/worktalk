@@ -47,11 +47,18 @@
   cursor:pointer;
 }
 .message-height{
-  height: 60px;
-  width: 200px;
-  border: 1px solid grey;
+  height: 55px;
+  /* width: 250px; */
+}
+.message-height:hover{
+  /* height: 55px; */
+  /* width: 250px; */
+  opacity: 0.5;
 }
 .icon-size{
-  height: 70;
-  width: 70;
+  height: 40px;
+  width: 40px;
+}
+.left{
+  left: 50px;
 }

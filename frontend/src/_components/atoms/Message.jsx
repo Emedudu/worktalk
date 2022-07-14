@@ -1,18 +1,41 @@
 import React from 'react';
 import { FaUser } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom';
 
 function Message(props) {
-    const {senderImage,sender,message,time,count}=props
+    const {
+        senderImage,
+        sender,
+        message,
+        time,
+        count,
+        id,
+        isOrg,
+        setOrganization
+    }=props
+    const navigate=useNavigate()
+    const trimText=(text)=>{
+        text=text.length>35?`${text.substring(0,32)}...`:text
+        return text
+    }
+    const handleRouteChange=(e)=>{
+        if(isOrg){
+            setOrganization(id)
+            navigate(`/${id}`)
+        }else{
+            // navigate to message
+        }
+    }
     return (
-        <div className='position-relative message-height '>
-            <div className='rounded-circle bg-primary d-inline-block icon-size'>
+        <div onClick={handleRouteChange} className='position-relative my-2 col-12 col-sm-8 col-lg-6 d-flex align-items-center cursor-pointer message-height '>
+            <div className='ml-1 rounded-circle d-flex justify-content-center align-items-center icon-size'>
                 {senderImage?
-                    <img className='rounded-circle' src={senderImage}/>:
+                    <img src={senderImage}/>:
                     <FaUser size={30} color='grey' />
                 }
             </div>
-            <span>{sender}</span>
-            <span>{message}</span>
+            <span className='position-absolute top-0 left'><b>{sender}</b></span>
+            <span className='position-absolute bottom-0 left'>{trimText(message)}</span>
             <span>{time}</span>
             <span>{count}</span>
         </div>

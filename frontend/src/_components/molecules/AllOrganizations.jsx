@@ -5,7 +5,7 @@ import { getState } from '../../_requests';
 import Message from '../atoms/Message';
 
 function AllOrganizations(props) {
-    const {organizations}=props
+    const {organizations,setOrganization}=props
     const [organizationDetails,setOrganizationDetails]=useState([])
     useEffect(()=>{
         organizations&&Promise.all(organizations.map(id=>
@@ -19,7 +19,17 @@ function AllOrganizations(props) {
         <div>
             {organizationDetails?(
                 <div>
-                    {organizationDetails.map((org,i)=><Message key={i} senderImage={''} sender={org.name} message={org.description} time={''} count={''} />)}
+                    {organizationDetails.map((org,i)=><Message 
+                                                        key={i} 
+                                                        senderImage={''} 
+                                                        sender={org.name} 
+                                                        message={org.description} 
+                                                        time={''} 
+                                                        count={''} 
+                                                        isOrg={true}
+                                                        id={org._id}
+                                                        setOrganization={setOrganization} 
+                                                        />)}
                 </div>
                 ):(
                     <div>

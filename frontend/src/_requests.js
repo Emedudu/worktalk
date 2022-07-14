@@ -24,9 +24,9 @@ export const login=async(token,email,password)=>{
         throw error
     }
 }
-export const createOrganization=async(token,name,description,passCode)=>{
+export const createOrganization=async(token,name,description,passCode,image)=>{
     try {
-        const res=await axios.post('/organization/createOrganization',{name,description,passCode},config(token))
+        const res=await axios.post('/organization/createOrganization',{name,description,passCode,image},config(token))
         return res
     } catch (error) {
         throw error

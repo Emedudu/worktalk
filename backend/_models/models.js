@@ -8,6 +8,9 @@ const OrganizationSchema=mongoose.Schema(
 		description:{
 			type: String
 		},
+		image:{
+			type:String
+		},
 		creator:{
 			type: mongoose.Schema.ObjectId
 		},

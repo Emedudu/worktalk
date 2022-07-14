@@ -14,9 +14,10 @@ import InfoPopup from './_components/atoms/InfoPopup';
 import { getState } from './_requests';
 
 const App=()=>{
-	const [notification,setNotification]=useState([])
-	const [sideBar,setSideBar]=useState(false)
 	const [isSignedIn,setIsSignedIn]=useState(false)
+	const [notification,setNotification]=useState([])
+	const [organization,setOrganization]=useState('')
+	const [sideBar,setSideBar]=useState(false)
 	const [userDetails,setUserDetails]=useState({})
 	useEffect(()=>{
 		
@@ -53,12 +54,19 @@ const App=()=>{
 														setUserDetails={setUserDetails} 
 														notification={notification} 
 														setNotification={setNotification}
+														setOrganization={setOrganization}
 														/> } />
-				<Route path = "/messages" exact element = { <MessageScreen/> } />
-				<Route path = "/organization" exact element = { <Organization/> } />
-				<Route path = "/chatRoom" exact element = { <ChatRoom/> } />
+				<Route path = "/messages" exact element = { <MessageScreen
+															/> } />
+				<Route path = {`/${organization}`} exact element = { <Organization 
+																	id={organization}
+																	notification={notification}
+																	setNotification={setNotification}
+																	/> } />
+				<Route path = "/chatRoom" exact element = { <ChatRoom
+															/> } />
 			</Routes>
-			{isSignedIn&&sideBar&&<SideBar/>}
+			{isSignedIn&&sideBar&&<SideBar setOrganization={setOrganization}/>}
 			{notification.length&&<InfoPopup notification={notification} setNotification={setNotification}/>}
 		</div>
 		

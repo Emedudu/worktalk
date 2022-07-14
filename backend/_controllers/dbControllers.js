@@ -76,8 +76,9 @@ export const deleteUser=async(req,res,next)=>{
 	}
 }
 export const createOrganization=async(req,res)=>{
+	// add image
 	try {
-		const {name,description,passCode}=req.body
+		const {name,description,passCode,image}=req.body
 		const id=req.user.user_id
 		const email=req.user.email
 		if(!(name&&description&&passCode))return res.status(400).json('All parameters are required')
@@ -85,6 +86,7 @@ export const createOrganization=async(req,res)=>{
 		const newOrganization = await Organization.create({
 			name,
 			description,
+			image,
 			creator:id,
 			owner:id,
 			ownerEmail:email,
@@ -150,14 +152,14 @@ export const changePassCode=async(req,res,next)=>{
 	}
 }
 export const changeParameter=async(req,res,next)=>{
-	const {name,description,organizationId}=req.body
+	const {name,description,image,organizationId}=req.body
 	const {user_id,email}=req.user
-	if(!(name||description))return res.status(400).json("Enter name or description")
+	if(!(name||description||image))return res.status(400).json("Enter name or description")
 	const organization=await Organization.findById(organizationId)
 	if(!organization)return res.status(400).json("Organization does not exist")
 	if(organization.owner!=user_id)return res.status(400).json('You do not have the right to this organization')
 	try {
-		await Organization.findByIdAndUpdate(organizationId,{name,description})	
+		await Organization.findByIdAndUpdate(organizationId,{name,description,image})	
 		res.status(200).json('Name and Description updated successfully')
 	} catch (error) {
 		res.status(500).json('Internal Server Error')

@@ -8,9 +8,10 @@ export default ({notification,setNotification}) => {
   const [name,setName]=useState('')
   const [description,setDescription]=useState('')
   const [passCode,setPassCode]=useState('')
+  const [file,setFile]=useState('')
   const create=(e)=>{
     e.preventDefault()
-    createOrganization(localStorage.getItem('token'),name,description,passCode)
+    createOrganization(localStorage.getItem('token'),name,description,passCode,file)
       .then((res)=>{
         console.log(res.data)
         setNotification([...notification,'Organization created successfully'])
@@ -21,6 +22,16 @@ export default ({notification,setNotification}) => {
     setName('')
     setDescription('')
     setPassCode('')
+    setFile('')
+  }
+  const setFileFromInput=(e)=>{
+    const fileForUpload=e.target.files[0]
+    const reader  = new FileReader();
+    reader.onload=(e)=>{
+        const readFile=e.target.result
+        readFile&&setFile(readFile)
+    }
+    reader.readAsDataURL(fileForUpload)   
   }
   return(
     <Popup trigger={
@@ -52,6 +63,13 @@ export default ({notification,setNotification}) => {
               className='form-control'
               value={passCode}
               type='password'
+          />
+          <input 
+            onChange={setFileFromInput}
+            type='file'
+            placeholder='Choose Image'
+            className="form-control"
+            accept="image/*"
           />
           <button 
           type='button' 
