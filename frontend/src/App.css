@@ -46,3 +46,12 @@
 .cursor-pointer{
   cursor:pointer;
 }
+.message-height{
+  height: 60px;
+  width: 200px;
+  border: 1px solid grey;
+}
+.icon-size{
+  height: 70;
+  width: 70;
+}

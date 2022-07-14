@@ -10,7 +10,7 @@ import ChatRoom from './_screens/ChatRoom';
 import Organization from './_screens/Organization';
 import Navigation from './_components/atoms/Navigation';
 import SideBar from './_components/molecules/SideBar';
-import Popup from './_components/atoms/Popup';
+import InfoPopup from './_components/atoms/InfoPopup';
 import { getState } from './_requests';
 
 const App=()=>{
@@ -59,7 +59,7 @@ const App=()=>{
 				<Route path = "/chatRoom" exact element = { <ChatRoom/> } />
 			</Routes>
 			{isSignedIn&&sideBar&&<SideBar/>}
-			{notification.length&&<Popup notification={notification} setNotification={setNotification}/>}
+			{notification.length&&<InfoPopup notification={notification} setNotification={setNotification}/>}
 		</div>
 		
 	);

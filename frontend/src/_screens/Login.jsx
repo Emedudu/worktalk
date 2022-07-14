@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../_requests';
 
 function Login(props) {
     const {notification,setNotification,setIsSignedIn}=props    
@@ -8,9 +9,9 @@ function Login(props) {
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
     const token=localStorage.getItem('token')
-    const login=(e)=>{
+    const handleLogin=(e)=>{
         e.preventDefault();
-        axios.post('/user/login',{token,email,password})
+        login(token,email,password)
             .then((res)=>{
                 if(res.data.auth){
                     localStorage.setItem('token',res.data.token)
@@ -44,7 +45,7 @@ function Login(props) {
             <button 
             type='button' 
             className='btn btn-primary' 
-            onClick={login}>
+            onClick={handleLogin}>
                 LOGIN
             </button>
         </div>

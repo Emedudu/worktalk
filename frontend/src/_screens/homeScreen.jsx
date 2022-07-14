@@ -1,10 +1,11 @@
 import React from 'react';
 import { useEffect } from 'react';
+import NewOrgPopup from '../_components/atoms/NewOrgPopup';
 import AllOrganizations from '../_components/molecules/AllOrganizations';
 import { getState } from '../_requests';
 
 const HomeScreen=(props)=>{
-    const {userDetails,setUserDetails,setNotification}=props
+    const {notification,userDetails,setUserDetails,setNotification}=props
     useEffect(()=>{
         getState(localStorage.getItem('token'))
 			.then((res)=>{
@@ -12,13 +13,15 @@ const HomeScreen=(props)=>{
 					setUserDetails(res.data)
                     console.log(res.data)
 				}else{
-					setNotification('Unable to retrieve data')
+					setNotification([...notification,'Unable to retrieve data'])
 				}
 			})
+            .catch((err)=>setNotification([...notification,'An error occurred']))
     },[])
     return (
-        <div>
+        <div className='p-5'>
             <AllOrganizations organizations={userDetails.organizations}/>
+            <NewOrgPopup notification={notification} setNotification={setNotification}/>
         </div>
     );
 }

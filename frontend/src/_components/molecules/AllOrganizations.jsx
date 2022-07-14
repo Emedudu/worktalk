@@ -9,12 +9,23 @@ function AllOrganizations(props) {
     const [organizationDetails,setOrganizationDetails]=useState([])
     useEffect(()=>{
         organizations&&Promise.all(organizations.map(id=>
-            getState(localStorage.getItem('token'),id))
-            ).then(values=>setOrganizationDetails(values))
+            getState(localStorage.getItem('token'),id)
+            ))
+            .then(res=>res.map(value=>value.data))
+            .then(values=>setOrganizationDetails(values))
     },[organizations])
+    console.log(organizations,organizationDetails)
     return (
         <div>
-            {organizationDetails.map((org,i)=><Message key={i} senderImage={} sender={} message={} time={} count={} />)}
+            {organizationDetails?(
+                <div>
+                    {organizationDetails.map((org,i)=><Message key={i} senderImage={''} sender={org.name} message={org.description} time={''} count={''} />)}
+                </div>
+                ):(
+                    <div>
+                        No organizations
+                    </div>
+                )}
         </div>
     );
 }
