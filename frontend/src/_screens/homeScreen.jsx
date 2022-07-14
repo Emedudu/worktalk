@@ -1,21 +1,24 @@
 import React from 'react';
 import { useEffect } from 'react';
+import AllOrganizations from '../_components/molecules/AllOrganizations';
 import { getState } from '../_requests';
 
 const HomeScreen=(props)=>{
-    
-    const token=localStorage.getItem('token')
+    const {userDetails,setUserDetails,setNotification}=props
     useEffect(()=>{
-        getState(token)
-            .then((res)=>console.log(res.data))
-    })
+        getState(localStorage.getItem('token'))
+			.then((res)=>{
+				if(res.status===200){
+					setUserDetails(res.data)
+                    console.log(res.data)
+				}else{
+					setNotification('Unable to retrieve data')
+				}
+			})
+    },[])
     return (
         <div>
-            
-            <div>
-
-            </div>
-            
+            <AllOrganizations organizations={userDetails.organizations}/>
         </div>
     );
 }

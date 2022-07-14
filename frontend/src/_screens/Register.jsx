@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Register=({notification,setNotification,setIsSignedIn})=>{
+const Register=(props)=>{
+    const {notification,setNotification,setIsSignedIn}=props
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [name,setName]=useState('')

@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Login({notification,setNotification,setIsSignedIn}) {
+function Login(props) {
+    const {notification,setNotification,setIsSignedIn}=props    
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
@@ -21,7 +22,6 @@ function Login({notification,setNotification,setIsSignedIn}) {
                 }
             })
             .catch((err)=>{
-                console.log(err)
                 setNotification([...notification,'Error logging in'])
             })
             

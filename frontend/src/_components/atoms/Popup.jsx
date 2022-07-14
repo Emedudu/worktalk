@@ -10,7 +10,7 @@ function Popup({notification,setNotification}) {
                 className="close-icon cursor-pointer" 
                 onClick={()=>
                     setNotification(notification.filter(
-                        (info)=>info!=notification
+                        (info)=>info!=notification[0]
                         ))
                     }
                 >

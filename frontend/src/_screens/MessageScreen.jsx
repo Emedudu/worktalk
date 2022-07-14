@@ -1,5 +1,5 @@
 import React from 'react';
-import Message from '../_components/Message';
+import Message from '../_components/atoms/Message';
 
 function MessageScreen(props) {
     return (
