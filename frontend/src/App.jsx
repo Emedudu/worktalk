@@ -12,6 +12,11 @@ import Navigation from './_components/atoms/Navigation';
 import SideBar from './_components/molecules/SideBar';
 import InfoPopup from './_components/atoms/InfoPopup';
 import { getState } from './_requests';
+import { createContext } from 'react';
+
+const isSignedInContext=createContext([false,()=>{}])
+const notificationContext=createContext([[],()=>{}])
+const sideBarContext=createContext([false,()=>{}])
 
 const App=()=>{
 	const [isSignedIn,setIsSignedIn]=useState(false)
