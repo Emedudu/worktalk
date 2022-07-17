@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { Link, useNavigate} from "react-router-dom";
 import { TiMessages } from "react-icons/ti";
 import { IoLogOutOutline } from "react-icons/io5";
+import { IsSignedInContext, SideBarContext } from "../../App";
 
-const Navigation=({sideBar,setSideBar,isSignedIn,setIsSignedIn})=>{
+const Navigation=()=>{
+    const [sideBar,setSideBar]=useContext(SideBarContext)
+    const [isSignedIn,setIsSignedIn]=useContext(IsSignedInContext)
     const navigate=useNavigate()
     const [expanded, setExpanded] = useState(false);
     const signOut=()=>{

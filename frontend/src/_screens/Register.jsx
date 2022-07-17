@@ -1,9 +1,12 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { IsSignedInContext, NotificationContext } from '../App';
 
 const Register=(props)=>{
-    const {notification,setNotification,setIsSignedIn}=props
+    const [notification,setNotification]=useContext(NotificationContext)
+    const [isSignedIn,setIsSignedIn]=useContext(IsSignedInContext)
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [name,setName]=useState('')

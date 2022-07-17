@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { IsSignedInContext, NotificationContext } from '../App';
 import { login } from '../_requests';
 
-function Login(props) {
-    const {notification,setNotification,setIsSignedIn}=props    
+function Login() {
+    const [notification,setNotification]=useContext(NotificationContext) 
+    const [isSignedIn,setIsSignedIn]=useContext(IsSignedInContext)
     const navigate=useNavigate()
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')

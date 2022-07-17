@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import { NotificationContext } from '../../App';
 import { createOrganization } from '../../_requests';
 
-export default ({notification,setNotification}) => {
+export default () => {
+  const [notification,setNotification]=useContext(NotificationContext)
   const [name,setName]=useState('')
   const [description,setDescription]=useState('')
   const [passCode,setPassCode]=useState('')

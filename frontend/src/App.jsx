@@ -14,15 +14,15 @@ import InfoPopup from './_components/atoms/InfoPopup';
 import { getState } from './_requests';
 import { createContext } from 'react';
 
-const isSignedInContext=createContext([false,()=>{}])
-const notificationContext=createContext([[],()=>{}])
-const sideBarContext=createContext([false,()=>{}])
+export const IsSignedInContext=createContext([false,()=>{}])
+export const NotificationContext=createContext([[],()=>{}])
+export const SideBarContext=createContext([false,()=>{}])
 
-const App=()=>{
+export const App=()=>{
 	const [isSignedIn,setIsSignedIn]=useState(false)
 	const [notification,setNotification]=useState([])
-	const [organization,setOrganization]=useState('')
 	const [sideBar,setSideBar]=useState(false)
+	const [organization,setOrganization]=useState('')
 	const [userDetails,setUserDetails]=useState({})
 	useEffect(()=>{
 		
@@ -36,46 +36,34 @@ const App=()=>{
 		popupFadeout,notification[0].length*100)
 	
 	return (
-		<div className="App">
-			<Navigation 
-			sideBar={sideBar} 
-			setSideBar={setSideBar} 
-			isSignedIn={isSignedIn}
-			setIsSignedIn={setIsSignedIn}
-			/>
-			<Routes>
-				<Route path = "/" exact element = { <Login 
-													setIsSignedIn={setIsSignedIn} 
-													notification={notification} 
-													setNotification={setNotification} 
-													/> } />
-				<Route path = "/register" exact element = { <Register 
-															setIsSignedIn={setIsSignedIn} 
-															notification={notification} 
-															setNotification={setNotification} 
-															/> } />
-				<Route path = "/home" exact element = { <HomeScreen 
-														userDetails={userDetails} 
-														setUserDetails={setUserDetails} 
-														notification={notification} 
-														setNotification={setNotification}
-														setOrganization={setOrganization}
-														/> } />
-				<Route path = "/messages" exact element = { <MessageScreen
-															/> } />
-				<Route path = {`/${organization}`} exact element = { <Organization 
-																	id={organization}
-																	notification={notification}
-																	setNotification={setNotification}
+		<IsSignedInContext.Provider value={[isSignedIn,setIsSignedIn]} >
+			<NotificationContext.Provider value={[notification,setNotification]}>
+				<SideBarContext.Provider value={[sideBar,setSideBar]}>
+					<div className="App">
+						<Navigation/>
+						<Routes>
+							<Route path = "/" exact element = { <Login /> } />
+							<Route path = "/register" exact element = { <Register /> } />
+							<Route path = "/home" exact element = { <HomeScreen 
+																	userDetails={userDetails} 
+																	setUserDetails={setUserDetails} 
+																	setOrganization={setOrganization}
 																	/> } />
-				<Route path = "/chatRoom" exact element = { <ChatRoom
-															/> } />
-			</Routes>
-			{isSignedIn&&sideBar&&<SideBar setOrganization={setOrganization}/>}
-			{notification.length&&<InfoPopup notification={notification} setNotification={setNotification}/>}
-		</div>
+							<Route path = "/messages" exact element = { <MessageScreen
+																		/> } />
+							<Route path = {`/${organization}`} exact element = { <Organization 
+																				id={organization}
+																				/> } />
+							<Route path = "/chatRoom" exact element = { <ChatRoom
+																		/> } />
+						</Routes>
+						{isSignedIn&&sideBar&&<SideBar setOrganization={setOrganization}/>}
+						{notification.length&&<InfoPopup/>}
+					</div>
+				</SideBarContext.Provider>
+			</NotificationContext.Provider>
+		</IsSignedInContext.Provider>
 		
 	);
 }
 
-export default App;

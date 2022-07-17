@@ -1,8 +1,10 @@
 import React from 'react';
+import { useContext } from 'react';
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { NotificationContext } from '../../App';
 
-function Popup({notification,setNotification}) {
-    console.log(notification)
+function Popup() {
+    const [notification,setNotification]=useContext(NotificationContext)
     return (
         <div className='position-fixed p-3 w-25 top-50 end-0 bg-glassy rounded'>
             <div className='d-flex flex-row align-items-center '>
