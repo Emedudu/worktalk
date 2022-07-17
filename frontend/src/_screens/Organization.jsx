@@ -14,9 +14,9 @@ function Organization(props) {
             .catch(err=>setNotification([...notification,'An Error Occurred']))
     },[])
     return (
-        <div style={{backgroundImage:`url(${details.image})`,backgroundSize:'cover'}}>
+        <div style={{backgroundImage:`url(${details.image})`,opacity:0.2, backgroundSize:'cover'}}>
             <div>
-                what is going on
+                <p>bfgkfkv</p>
             </div>
         </div>
     );
