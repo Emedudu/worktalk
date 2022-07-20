@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IsSignedInContext, NotificationContext } from '../App';
+import { signIn } from '../firbase';
 import { login } from '../_requests';
 
 function Login() {
@@ -14,22 +15,18 @@ function Login() {
     const token=localStorage.getItem('token')
     const handleLogin=(e)=>{
         e.preventDefault();
-        login(token,email,password)
+        signIn(email,password)
             .then((res)=>{
-                if(res.data.auth){
-                    localStorage.setItem('token',res.data.token)
-                    setIsSignedIn(true)
-                    setNotification([...notification,'Logged in successfully'])
-                    navigate('/home');
-                }else{
-                    setNotification([...notification,'Error Logging in'])
-                }
+                console.log(res)
+                localStorage.setItem('token',res.token)
+                setIsSignedIn(true)
+                setNotification([...notification,'Logged insuccessfully'])
+                navigate('/home');
             })
             .catch((err)=>{
                 setNotification([...notification,'Error logging in'])
             })
-            
-        }
+    }
     return (
         <div>
             <input

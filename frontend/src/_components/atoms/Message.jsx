@@ -11,7 +11,6 @@ function Message(props) {
         count,
         id,
         isOrg,
-        setOrganization
     }=props
     const navigate=useNavigate()
     const trimText=(text)=>{
@@ -20,8 +19,8 @@ function Message(props) {
     }
     const handleRouteChange=(e)=>{
         if(isOrg){
-            setOrganization(id)
-            navigate(`/${id}`)
+            sessionStorage.setItem('org',id)
+            navigate(`/organization`)
         }else{
             // navigate to message
         }

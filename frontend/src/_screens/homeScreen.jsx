@@ -7,7 +7,7 @@ import AllOrganizations from '../_components/molecules/AllOrganizations';
 import { getState } from '../_requests';
 
 const HomeScreen=(props)=>{
-    const {userDetails,setUserDetails,setOrganization}=props
+    const {userDetails,setUserDetails}=props
     const [notification,setNotification]=useContext(NotificationContext)
     useEffect(()=>{
         getState(localStorage.getItem('token'))
@@ -23,7 +23,7 @@ const HomeScreen=(props)=>{
     },[])
     return (
         <div className='p-5'>
-            <AllOrganizations organizations={userDetails.organizations} setOrganization={setOrganization}/>
+            <AllOrganizations organizations={userDetails.organizations}/>
             <NewOrgPopup/>
         </div>
     );

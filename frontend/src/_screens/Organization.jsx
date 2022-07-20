@@ -6,18 +6,15 @@ import { getState } from '../_requests';
 
 function Organization(props) {
     const [notification,setNotification]=useContext(NotificationContext)
-    const {id}=props
     const [details,setDetails]=useState({})
     useEffect(()=>{
-        getState(localStorage.getItem('token'),id)
+        getState(localStorage.getItem('token'),sessionStorage.getItem('org'))
             .then(res=>setDetails(res.data))
             .catch(err=>setNotification([...notification,'An Error Occurred']))
     },[])
     return (
-        <div style={{backgroundImage:`url(${details.image})`,opacity:0.2, backgroundSize:'cover'}}>
-            <div>
-                <p>bfgkfkv</p>
-            </div>
+        <div style={{backgroundImage:`url(${details.image})`, backgroundSize:'contain', minHeight:'100vh'}}>
+            <h1 className='text-light'>here I am</h1>
         </div>
     );
 }

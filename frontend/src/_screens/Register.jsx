@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IsSignedInContext, NotificationContext } from '../App';
+import { signUp } from '../firbase';
 
 const Register=(props)=>{
     const [notification,setNotification]=useContext(NotificationContext)
@@ -16,19 +17,15 @@ const Register=(props)=>{
     const [location,setLocation]=useState('')
     const register=(e)=>{
         e.preventDefault();
-        axios.post('/user/register',{email,name,password,location})
+        signUp(email,password,name,location)
             .then((res)=>{
-                if(res.data.auth){
-                    localStorage.setItem('token',res.data.token)
-                    setIsSignedIn(true)
-                    setNotification([...notification,'Registered successfully'])
-                    navigate('/home');
-                }else{
-                    setNotification([...notification,'Error Registering'])
-                }
+                console.log(res)
+                localStorage.setItem('token',res.token)
+                setIsSignedIn(true)
+                setNotification([...notification,'Registered successfully'])
+                navigate('/home');
             })
             .catch((err)=>{
-                console.log(err)
                 setNotification([...notification,'Error Registering'])
             })
     }

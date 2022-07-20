@@ -22,7 +22,6 @@ export const App=()=>{
 	const [isSignedIn,setIsSignedIn]=useState(false)
 	const [notification,setNotification]=useState([])
 	const [sideBar,setSideBar]=useState(false)
-	const [organization,setOrganization]=useState('')
 	const [userDetails,setUserDetails]=useState({})
 	useEffect(()=>{
 		
@@ -47,17 +46,14 @@ export const App=()=>{
 							<Route path = "/home" exact element = { <HomeScreen 
 																	userDetails={userDetails} 
 																	setUserDetails={setUserDetails} 
-																	setOrganization={setOrganization}
 																	/> } />
 							<Route path = "/messages" exact element = { <MessageScreen
 																		/> } />
-							<Route path = {`/${organization}`} exact element = { <Organization 
-																				id={organization}
-																				/> } />
+							<Route path = {`/organization`} exact element = { <Organization /> } />
 							<Route path = "/chatRoom" exact element = { <ChatRoom
 																		/> } />
 						</Routes>
-						{isSignedIn&&sideBar&&<SideBar setOrganization={setOrganization}/>}
+						{isSignedIn&&sideBar&&<SideBar/>}
 						{notification.length&&<InfoPopup/>}
 					</div>
 				</SideBarContext.Provider>

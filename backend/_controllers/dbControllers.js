@@ -11,24 +11,22 @@ const secret=process.env.SECRET
 export const register =  async (req,res)=>{
 	try{
 		// destructure the request parameters
-		const {email,name,password,location} = req.body;
+		const {name,uid,location} = req.body;
 		// make sure all required params are given
-		if (!(email && name && password && location))return res.status(400).send("All params required");
+		if (!(name && uid && location))return res.status(400).send("All params required");
 		// require the email does not exist
-		const exists=await User.findOne({email})
+		const exists=await User.findOne({uid})
 		if (exists) return res.status(400).json('User Already Exists')
-		const hashedPassword=hashPassword(password)
 		// create the user
 		const newUser = await User.create({
-			email,
 			name,
-			password:hashedPassword,
+			uid,
 			location,
 			skills:[],
 			organizations:[],
 			timestamp:Date.now()
 		});
-		const token=signToken(newUser._id,email)
+		const token=signToken(newUser._id,uid)
 		// send the token to the user
 		return res.status(200).json({auth:true,token});
 	}catch(err){
@@ -39,8 +37,8 @@ export const login=async(req,res)=>{
 	try {
 		const token =
 		req.body.token || req.query.token || req.headers["x-access-token"];
-		const {email,password}=req.body
-		if(!(email&&password)){
+		const {uid}=req.body
+		if(!(uid)){
 			if(token){
 				try {
 					jwt.verify(token, secret);
@@ -50,13 +48,10 @@ export const login=async(req,res)=>{
 				}
 			}
 		}
-		const user=await User.findOne({email})
+		const user=await User.findOne({uid})
 		if (!user) return res.status(404).json('No User Found')
 		
-		const passwordIsValid = validatePassword(password, user.password);
-		if (!passwordIsValid) return res.status(401).send({ auth: false });
-		
-		const newToken=signToken(user._id,email)
+		const newToken=signToken(user._id,uid)
 		res.status(200).json({ auth: true, token: newToken});
 	} catch (error) {
 		res.status(500).json("internal server error")

@@ -16,9 +16,17 @@ export const getState=async(token,organizationId='')=>{
         throw error
     }
 }
-export const login=async(token,email,password)=>{
+export const register=async(name,uid,location)=>{
     try {
-        const res=await axios.post('/user/login',{email,password},config(token))
+        const res=await axios.post('/user/register',{name,uid,location})
+        return res
+    } catch (error) {
+        throw error
+    }
+}
+export const login=async(uid,token)=>{
+    try {
+        const res=await axios.post('/user/login',{uid},config(token))
         return res
     } catch (error) {
         throw error

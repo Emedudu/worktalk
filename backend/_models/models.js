@@ -70,17 +70,18 @@ const MessageSchema=mongoose.Schema(
 )
 const UserSchema = mongoose.Schema(
 	{
-		email:{
-			type: String,
-			required: true
-		},
+		
 		name:{
 			type: String,
 			required: true
 		},
-		password:{
+		uid:{
 			type: String,
 			required: true
+		},
+		location:{
+			type: String,
+			required: false
 		},
 		skills:{
 			type:[String]
