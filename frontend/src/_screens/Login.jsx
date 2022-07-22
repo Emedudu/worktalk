@@ -15,7 +15,7 @@ function Login() {
     const token=localStorage.getItem('token')
     const handleLogin=(e)=>{
         e.preventDefault();
-        signIn(email,password)
+        signIn(email,password,localStorage.getItem('token'))
             .then((res)=>{
                 console.log(res)
                 localStorage.setItem('token',res.token)
