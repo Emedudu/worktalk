@@ -19,6 +19,7 @@ function Login() {
             .then((res)=>{
                 console.log(res)
                 localStorage.setItem('token',res.token)
+                localStorage.setItem('userId',res.userId)
                 setIsSignedIn(true)
                 setNotification([...notification,'Logged insuccessfully'])
                 navigate('/home');
