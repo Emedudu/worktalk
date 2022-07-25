@@ -345,12 +345,13 @@ export const updateUserParams=async(req,res,next)=>{
 export const getUsersIPFSHash=async(req,res,next)=>{
 	const {uidArray}=req.body
 	try {
-		const ipfsArray=Promise.all(uidArray.map(async(uid)=>{
+		// console.log(uidArray)
+		Promise.all(uidArray.map(async(uid)=>{
 			const user=await User.findOne({uid})
 			if(!user)return null
 			return user.ipfsHash
 		}))
-		res.status(200).json({ipfsArray})
+		.then((ipfsArray)=>res.status(200).json({ipfsArray}))
 	} catch (error) {
 		res.status(500).json('Unable to complete request')
 	}

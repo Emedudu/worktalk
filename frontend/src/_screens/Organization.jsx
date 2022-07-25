@@ -29,41 +29,48 @@ function Organization(props) {
     }
     const formatMessage=async(rawMessagesObject)=>{
         const rawMessagesArray=Object.entries(rawMessagesObject)
-        console.log(rawMessagesArray)
-        // const uidArray=rawMessagesArray.map((message)=> message[1].userId)
-        // try {
-        //     const res=await getIPFSHash(uidArray)
-        //     const ipfsHashArray=res.data.ipfsArray
-        //     Promise.all(ipfsHashArray.map(async(ipfsHash)=>{
-        //         const response=await fetch(`https://ipfs.infura.io/ipfs/${ipfsHash}`)
-        //         const metadata=await response.json()
-        //         return metadata
-        //     }))
-        //     .then((res)=>console.log(res))
-        // } catch (error) {
-        //     setNotification([...notification,"An error occurred"])
-        // }
-        
+        const uidArray=rawMessagesArray.map((message)=> message[1].userId)
+        try {
+            const res=await getIPFSHash(localStorage.getItem('token'),uidArray)
+            const ipfsHashArray=res.data.ipfsArray
+            Promise.all(ipfsHashArray.map(async(ipfsHash)=>{
+                const response=await fetch(`https://ipfs.infura.io/ipfs/${ipfsHash}`)
+                const metadata=await response.json()
+                return metadata
+            }))
+            .then((res)=>{
+                setAllMessages(rawMessagesArray.map((rawMessage,i)=>{
+                    return {
+                        ...res[i],
+                        ...rawMessage[1],
+                        messageId:rawMessage[0]
+                    }
+                }))
+            })
+        } catch (error) {
+            setNotification([...notification,"An error occurred"])
+        }
     }
     data&&formatMessage(data)
-    allMessages&&console.log(allMessages)
+    // console.log(allMessagest)
     return (
         <div className='row'>
-            {/* {allMessages.map((message)=>{
+            {allMessages.map((message)=>{
                 return(
                     <Message
-                    senderImage={''} 
-                    sender={org.name} 
-                    message={org.description} 
-                    time={''} 
-                    count={''} 
-                    isOrg={true}
-                    id={org._id}
+                    key={message.messageId}
+                    senderImage={message.avatar} 
+                    sender={message.nickName} 
+                    message={message.text} 
+                    time={message.timeStamp} 
+                    count={1} 
+                    isOrg={false}
+                    // id={org._id}
                     />
                 )
             })
 
-            } */}
+            }
             <div className="input-group mb-3 fixed-bottom col-8">
                 <input 
                 type="text" 

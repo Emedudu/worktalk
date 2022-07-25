@@ -40,9 +40,9 @@ export const createOrganization=async(token,name,description,passCode,image)=>{
         throw error
     }
 }
-export const getIPFSHash=async(token,userFirebaseId)=>{
+export const getIPFSHash=async(token,uidArray)=>{
     try {
-        const res=await axios.post('/user/getIPFSHash',{userFirebaseId},config(token))
+        const res=await axios.post('/user/getIPFSHash',{uidArray},config(token))
         return res
     } catch (error) {
         throw error

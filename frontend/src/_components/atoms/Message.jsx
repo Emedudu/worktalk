@@ -29,7 +29,7 @@ function Message(props) {
         <div onClick={handleRouteChange} className='position-relative my-2 col-12 col-sm-8 col-lg-6 d-flex align-items-center cursor-pointer message-height '>
             <div className='ml-1 rounded-circle d-flex justify-content-center align-items-center icon-size'>
                 {senderImage?
-                    <img src={senderImage}/>:
+                    <img src={senderImage} height='30px' width='30px'/>:
                     <FaUser size={30} color='grey' />
                 }
             </div>

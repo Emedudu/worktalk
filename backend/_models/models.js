@@ -83,7 +83,7 @@ const UserSchema = mongoose.Schema(
 			type: String,
 			required: false
 		},
-		ipfshash:{
+		ipfsHash:{
 			type:String,
 			required:false
 		},
