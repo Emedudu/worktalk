@@ -15,7 +15,8 @@ import { register,
         deleteUser, 
         promoteEmployee, 
         updateUserParams, 
-        transferOwnership } from '../_controllers/dbControllers.js';
+        transferOwnership, 
+        getUsersIPFSHash} from '../_controllers/dbControllers.js';
 
 export const userRouter = express.Router();
 
@@ -28,6 +29,7 @@ userRouter.route('/quitOrganization').delete(verifyToken,quitOrganization)
 userRouter.route('/message').post(verifyToken,message)
 userRouter.route('/getMessages').post(verifyToken,getMessages)
 userRouter.route('/updateParams').post(verifyToken,updateUserParams)
+userRouter.route('/getIPFSHash').post(verifyToken,getUsersIPFSHash)
 
 export const organizationRouter=express.Router();
 

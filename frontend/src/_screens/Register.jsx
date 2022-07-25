@@ -2,8 +2,12 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {create as ipfsHttpClient} from 'ipfs-http-client'
+
 import { IsSignedInContext, NotificationContext } from '../App';
 import { signUp } from '../firbase';
+
+const client=ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 const Register=(props)=>{
     const [notification,setNotification]=useContext(NotificationContext)
@@ -15,9 +19,20 @@ const Register=(props)=>{
     const [password,setPassword]=useState('')
     // will later use geolocation api or use a dropdown select for the location
     const [location,setLocation]=useState('')
-    const register=(e)=>{
+    const [nickName,setNickname]=useState('')
+    const [avatar,setAvatar]=useState('')
+    const register=async(e)=>{
         e.preventDefault();
-        signUp(email,password,name,location)
+        let res
+        if(nickName||avatar){
+            try {
+                let metadata=JSON.stringify({nickName,avatar})
+                res=await client.add(metadata)
+            } catch (error) {
+                setNotification([...notification,'Error uploading Image please try using a computer'])
+            }
+        }
+        signUp(email,password,name,location,res.path)
             .then((res)=>{
                 console.log(res)
                 localStorage.setItem('token',res.token)
@@ -28,7 +43,17 @@ const Register=(props)=>{
             })
             .catch((err)=>{
                 setNotification([...notification,'Error Registering'])
-            })
+            }
+        )
+    }
+    const setFileFromInput=(e)=>{
+        const fileForUpload=e.target.files[0]
+        const reader  = new FileReader();
+        reader.onload=(e)=>{
+            const readFile=e.target.result
+            readFile&&setAvatar(readFile)
+        }
+        reader.readAsDataURL(fileForUpload)   
     }
     return (
         <div>
@@ -58,6 +83,20 @@ const Register=(props)=>{
                 className='form-control'
                 value={location}
                 type='text'
+            />
+            <input
+                onChange={(e)=>setNickname(e.target.value)}
+                placeholder='Enter a nickname'
+                className='form-control'
+                value={nickName}
+                type='text'
+            />
+            <input 
+            onChange={setFileFromInput}
+            type='file'
+            placeholder='Choose an Avatar'
+            className="form-control"
+            accept="image/*"
             />
             <button 
             type='button' 

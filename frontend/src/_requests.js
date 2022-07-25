@@ -16,9 +16,9 @@ export const getState=async(token,organizationId='')=>{
         throw error
     }
 }
-export const register=async(name,uid,location)=>{
+export const register=async(name,uid,location,ipfsHash)=>{
     try {
-        const res=await axios.post('/user/register',{name,uid,location})
+        const res=await axios.post('/user/register',{name,uid,location,ipfsHash})
         return res
     } catch (error) {
         throw error
@@ -35,6 +35,14 @@ export const login=async(uid,token)=>{
 export const createOrganization=async(token,name,description,passCode,image)=>{
     try {
         const res=await axios.post('/organization/createOrganization',{name,description,passCode,image},config(token))
+        return res
+    } catch (error) {
+        throw error
+    }
+}
+export const getIPFSHash=async(token,userFirebaseId)=>{
+    try {
+        const res=await axios.post('/user/getIPFSHash',{userFirebaseId},config(token))
         return res
     } catch (error) {
         throw error

@@ -83,6 +83,10 @@ const UserSchema = mongoose.Schema(
 			type: String,
 			required: false
 		},
+		ipfshash:{
+			type:String,
+			required:false
+		},
 		skills:{
 			type:[String]
 		},

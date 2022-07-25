@@ -11,7 +11,7 @@ const secret=process.env.SECRET
 export const register =  async (req,res)=>{
 	try{
 		// destructure the request parameters
-		const {name,uid,location} = req.body;
+		const {name,uid,location,ipfsHash} = req.body;
 		// make sure all required params are given
 		if (!(name && uid && location))return res.status(400).send("All params required");
 		// require the email does not exist
@@ -22,6 +22,7 @@ export const register =  async (req,res)=>{
 			name,
 			uid,
 			location,
+			ipfsHash,
 			skills:[],
 			organizations:[],
 			timestamp:Date.now()
@@ -339,6 +340,19 @@ export const updateUserParams=async(req,res,next)=>{
 		})	
 	}catch(error){
 		res.status(500).json("Unable to update parameters")
+	}
+}
+export const getUsersIPFSHash=async(req,res,next)=>{
+	const {uidArray}=req.body
+	try {
+		const ipfsArray=Promise.all(uidArray.map(async(uid)=>{
+			const user=await User.findOne({uid})
+			if(!user)return null
+			return user.ipfsHash
+		}))
+		res.status(200).json({ipfsArray})
+	} catch (error) {
+		res.status(500).json('Unable to complete request')
 	}
 }
 // TODO: implement this function
