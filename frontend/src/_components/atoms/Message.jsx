@@ -9,6 +9,7 @@ function Message(props) {
         message,
         time,
         count,
+        isSender,
         id,
         isOrg,
     }=props
@@ -26,7 +27,7 @@ function Message(props) {
         }
     }
     return (
-        <div onClick={handleRouteChange} className='position-relative my-2 col-12 col-sm-8 col-lg-6 d-flex align-items-center cursor-pointer message-height '>
+        <div onClick={handleRouteChange} className={`position-relative my-2 d-flex align-items-center cursor-pointer message-height ${isSender&&'ml-auto'}`}>
             <div className='ml-1 rounded-circle d-flex justify-content-center align-items-center icon-size'>
                 {senderImage?
                     <img src={senderImage} height='30px' width='30px'/>:

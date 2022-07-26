@@ -12,7 +12,7 @@ function Organization(props) {
     const [details,setDetails]=useState({})
     const [text,setText]=useState('')
     const [allMessages,setAllMessages]=useState([])
-    const [data,setData]=useState({})
+    const [data,setData]=useState([])
     useEffect(()=>{
         getState(localStorage.getItem('token'),sessionStorage.getItem('org'))
             .then(res=>{
@@ -27,8 +27,8 @@ function Organization(props) {
         setMessage(text,Date.now(),localStorage.getItem('userId'),details._id)
         setText('')
     }
-    const formatMessage=async(rawMessagesObject)=>{
-        const rawMessagesArray=Object.entries(rawMessagesObject)
+    const formatMessage=async(rawMessagesArray)=>{
+        // console.log(rawMessagesArray)
         const uidArray=rawMessagesArray.map((message)=> message[1].userId)
         try {
             const res=await getIPFSHash(localStorage.getItem('token'),uidArray)
@@ -51,10 +51,10 @@ function Organization(props) {
             setNotification([...notification,"An error occurred"])
         }
     }
+    // console.log(allMessages)
     data&&formatMessage(data)
-    // console.log(allMessagest)
     return (
-        <div className='row'>
+        <div className='d-flex flex-column'>
             {allMessages.map((message)=>{
                 return(
                     <Message
@@ -64,6 +64,7 @@ function Organization(props) {
                     message={message.text} 
                     time={message.timeStamp} 
                     count={1} 
+                    isSender={message.userId==localStorage.getItem('userId')}
                     isOrg={false}
                     // id={org._id}
                     />

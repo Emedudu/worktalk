@@ -24,7 +24,7 @@ export const App = () => {
 	const [sideBar, setSideBar] = useState(false)
 	const [userDetails, setUserDetails] = useState({})
 	useEffect(() => {
-
+		
 	})
 	const popupFadeout = () => {
 		setNotification(notification.filter(
