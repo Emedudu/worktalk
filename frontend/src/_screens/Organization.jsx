@@ -55,23 +55,23 @@ function Organization(props) {
     data&&formatMessage(data)
     return (
         <div className='d-flex flex-column'>
-            {allMessages.map((message)=>{
-                return(
-                    <Message
-                    key={message.messageId}
-                    senderImage={message.avatar} 
-                    sender={message.nickName} 
-                    message={message.text} 
-                    time={message.timeStamp} 
-                    count={1} 
-                    isSender={message.userId==localStorage.getItem('userId')}
-                    isOrg={false}
-                    // id={org._id}
-                    />
-                )
-            })
-
-            }
+            <div className='chat-div'>
+                {allMessages.map((message)=>{
+                    return(
+                        <Message
+                        key={message.messageId}
+                        senderImage={message.avatar} 
+                        sender={message.nickName} 
+                        message={message.text} 
+                        time={message.timestamp} 
+                        isSender={message.userId==localStorage.getItem('userId')}
+                        isOrg={false}
+                        // id={org._id}
+                        />
+                    )
+                })
+                }
+            </div>
             <div className="input-group mb-3 fixed-bottom col-8">
                 <input 
                 type="text" 
