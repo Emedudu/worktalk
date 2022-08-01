@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Message from '../_components/atoms/Message';
 
 function MessageScreen(props) {
+    useEffect(()=>{
+        
+    })
     return (
         <div>
             <Message/>

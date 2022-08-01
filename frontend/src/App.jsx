@@ -17,7 +17,7 @@ import { createContext } from 'react';
 export const IsSignedInContext = createContext([false, () => { }])
 export const NotificationContext = createContext([[], () => { }])
 export const SideBarContext = createContext([false, () => { }])
-
+// Refactor whole app with bootstrap
 export const App = () => {
 	const [isSignedIn, setIsSignedIn] = useState(false)
 	const [notification, setNotification] = useState([])
